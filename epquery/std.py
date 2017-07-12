@@ -13,28 +13,6 @@ import math
 # Standard functions for Manager.apply()
 # =============================================================
 
-def comment(objects):
-    """
-    Puts '!=' in the begining of each line.
-    
-    .. note::
-
-        Currently, commented objects cannot be uncommented!
-        It is because they cannot be located by Manager.query,
-        which searches for objects compliant with IDD. Also,
-        all comment in IDF files are deleted during parsing.
-
-    :param objects: Objects to be commented out
-    :type objects: list(list(str))
-    :rtype: list(list(str))
-    """
-    com = list()
-    for obj in objects:
-        com_obj = ['!= ' + line for line in obj]
-        com.append(com_obj)
-    return com
-
-
 def delete(objects):
     """
     Returns a list of Nones.
@@ -122,7 +100,7 @@ def interface_variable(objects, key_values, manager):
 def daylighting_ref_pts(objects, editor):
     """
     Returns Daylighting:ReferencePoint objects for each zone.
-    Reference points are put in the floor centroid at z = 0.8 [m].
+    Reference points are put above the floor centroid at z = 0.8 [m].
     **Takes floor surfaces as objects.**
 
     .. warning::

@@ -275,6 +275,33 @@ class BasicEdit(object):
 
         return selected
 
+    def comment(self, mask):
+        """
+        Puts '!=' in the begining of each line of the selected objects.
+        Edits *IN PLACE* and returns the commented objects.
+        
+        .. note::
+
+            Currently, commented objects cannot be uncommented!
+            It is because they cannot be located by query(),
+            which searches for objects compliant with IDD. Also,
+            all comment in IDF files are deleted during parsing.
+
+        :param mask: Objects to be commented out
+        :type mask: list(bool)
+        :returns: Commented objects
+        :rtype: list(list(str))
+        """
+        objects = self.filter(mask)
+        index = [x for x, y in enumerate(mask) if y is True]
+
+        com = list()
+        for obj, i in zip(objects, index):
+            com_obj = ['!= ' + line for line in obj]
+            self.idf.set_object(i, com_obj)
+            com.append(com_obj)
+        return com
+
     def add_object(self, obj, index=None):
         """
         Adds EnergyPlus object to the IDF.
