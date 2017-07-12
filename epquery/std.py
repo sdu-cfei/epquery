@@ -13,18 +13,6 @@ import math
 # Standard functions for Manager.apply()
 # =============================================================
 
-def delete(objects):
-    """
-    Returns a list of Nones.
-
-    :param objects: Objects to be deleted
-    :type objects: list(list(str))
-    :rtype: list(None)
-    """
-    d = [None for obj in objects]
-    return d
-
-
 def interface_schedule(objects, manager, init_val=0):
     """
     Returns external interface objects for schedules.

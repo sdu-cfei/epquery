@@ -302,6 +302,22 @@ class BasicEdit(object):
             com.append(com_obj)
         return com
 
+    def remove(self, mask):
+        """
+        Removes selected objects *IN PLACE*. Returns removed objects.
+
+        :param mask: Selected objects
+        :type mask: list(bool)
+        :returns: A copy of the deleted objects
+        :rtype: list(list(str))
+        """
+        index = [x for x, y in enumerate(mask) if y is True]
+        deleted = list()
+        for i in sorted(index, reverse=True):
+            deleted.append(self.idf.idf.pop(i))
+        
+        return deleted
+
     def add_object(self, obj, index=None):
         """
         Adds EnergyPlus object to the IDF.
