@@ -23,19 +23,20 @@ class Manager(object):
     in IDF file. It contains only basic manipulation methods in its
     API (object type-agnostic). Look into the *Editor* class for more
     specialized methods.
-
-    *Manager* contains two public attributes, *idf* and *idd*, which are
-    instances of *IDF* and *IDD* classes. Users are encouraged
-    to use public methods of that objects through the instance of
-    *Manager* class, e.g.::
-
-        man = Manager(idf_path, idd_path)
-        man.idd.get_object_info('Zone')
     """
 
     def __init__(self, idf_path, idd_path):
         self.idf = idf.IDF(idf_path)
         self.idd = idd.IDD(idd_path)
+
+    def get_object_info(self, obj_type):
+        """
+        Returns object information based on the IDD file.
+
+        :param str obj_type: Object type, e.g. 'Zone'
+        :rtype: str
+        """
+        return self.idd.get_object_info(obj_type)
 
     def query(self, keyword, method='exact', **kwargs):
         """
