@@ -1,11 +1,11 @@
 import logging
 logger = logging.getLogger(__name__)
 import numpy as np
-from epquery.manager import Manager
+from epquery import BasicEdit
 from epquery import utilities
 
 
-class Editor(Manager):
+class Editor(BasicEdit):
     """
     Class with object-specifc methods.
     """

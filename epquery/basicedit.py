@@ -17,9 +17,9 @@ from epquery import idf
 from epquery import utilities
 
 
-class Manager(object):
+class BasicEdit(object):
     """
-    Manager is used to query and manipulate EnergyPlus model stored
+    BasicEdit is used to query and manipulate EnergyPlus model stored
     in IDF file. It contains only basic manipulation methods in its
     API (object type-agnostic). Look into the *Editor* class for more
     specialized methods.
@@ -60,8 +60,8 @@ class Manager(object):
         :rtype: list(list(str))
 
         Example:
-        >>> man = Manager('path_to_IDF', 'path_to_IDD')
-        >>> objects = idf.query('Zone', method='words',
+        >>> ep = BasicEdit('path_to_IDF', 'path_to_IDD')
+        >>> objects = ep.query('Zone', method='words',
                                 Name='Zone1',
                                 Floor_Area=33.5)
         """
@@ -257,7 +257,7 @@ class Manager(object):
         assert len(mask) == len(objects), 'Lengths of mask ({}) and objects ({}) do not match'\
                                           .format(len(mask), len(objects))
         if mask.count(True) == 0:
-            logger.warning('{}: Mask is empty!'.format(Manager.apply.__name__))
+            logger.warning('[apply] Mask is empty!')
 
         # Get indices of unmasked objects
         for i in range(len(mask)):
