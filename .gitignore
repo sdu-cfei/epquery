@@ -2,4 +2,6 @@
 *.log
 *.idf
 *.fmu
+*.txt
 Output_EPExport_Slave/
+epquery.egg-info/

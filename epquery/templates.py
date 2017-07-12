@@ -127,7 +127,8 @@ def daylighting_ref_pts(objects, editor):
     .. warning::
 
         If a zone's floor is a patchwork of multiple surfaces,
-        only the biggest subsurface is taken into account.
+        boundary vertices are found. However, the result
+        on non-rectangular non-symmetric floors is unpredictable.
 
     :param objects: Floor surfaces (BuildingSurface:Detailed)
     :type objects: list(list(str))
