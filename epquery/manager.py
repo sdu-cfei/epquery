@@ -49,6 +49,10 @@ class Manager(object):
         *kwargs* represents field descriptors from IDD (``\\field``).
         If a descriptor contains space, replace it with underscore.
 
+        .. warning::
+
+            Currently field names with special characters (e.g. {}/\\) are not supported.
+
         :param str keyword: Unique keyword defining object type, e.g. 'Zone'
         :param str method: Search method ('exact', 'substring' or 'words')
         :param kwargs: Field types and required values
@@ -351,8 +355,8 @@ class Manager(object):
     def get_index(self, obj_type, method='exact', flatten=True, **kwargs):
         """
         Returns index of the object. If more than one object is found, returns a list
-        of indices. If *flatten* is False, then returns list of ints even if only
-        one object was found (single-element list). Returns None if no object
+        of indices. If *flatten* is False, then returns a list even if only
+        one object is found (single-element list). Returns None if no object
         matches the criteria.
 
         :param str obj_type: Object type
@@ -371,22 +375,71 @@ class Manager(object):
         else:
             return index
 
-    def set_field(self, index, **kwargs):
+    def set_field(self, mask, **kwargs):
         """
-        Sets a new value(s) to the object field(s). The object
-        is identified by its *index*. Field names and values
-        are passed in *kwargs*. If a field name contains a white
-        space, replace it with an underscore. All field names
-        must exist in the selected object.
+        Sets a new value(s) to the field(s) of the selected objects *IN PLACE*.
+        In addition returns the modified objects.
 
-        The method works only with a single object.
+        .. warning::
 
-        :param int index: Object index
+            Does not work with expandable objects with unnamed fields.
+
+        .. warning::
+
+            Currently field names with special characters (e.g. {}/\\) are not supported.
+
+        :param mask: Selected objects
+        :type mask: list(bool)
         :param kwargs: Field names and new values
-        :returns: A copy of the new object
-        :rtype: list(str)
+        :returns: A copy of the modified objects
+        :rtype: list(list(str))
         """
-        pass  # TODO: implement
+        # List of indices
+        index = [x for x, y in enumerate(mask) if y is True]
+
+        # Objects
+        objects = self.filter(mask)
+        assert len(objects) > 0, '[set_field] At least one object required...'
+
+        # Set fields
+        new_objects = list()
+        
+        for obj in objects:
+
+            # Make sure the object is not empty
+            assert len(obj) > 0, 'Empty object found'
+
+            # Make sure the keys are matching
+            obj_type = obj[0]
+            fields = self.idd.get_field_names(obj_type)
+
+            keys_ok = True
+            for key in kwargs.keys():
+                if key not in fields:
+                    keys_ok = False
+
+            if keys_ok is False:
+                msg = '[set_field] Selected objects do not contain all keys from kwargs'
+                logger.error(msg)
+                raise KeyError(msg)
+
+            # Copy and modify
+            new_objects.append(list())
+            new_objects[-1].append(obj_type)
+
+            for v, f in zip(obj[1:], fields):
+                if f in kwargs:
+                    # New value
+                    new_objects[-1].append(kwargs[f])
+                else:
+                    # Original value
+                    new_objects[-1].append(v)
+
+        # Replace original objects
+        for i, obj in zip(index, new_objects):
+            self.idf.set_object(i, obj)
+
+        return None
 
     def get_field(self, obj, field, flatten=True):
         """
@@ -406,7 +459,7 @@ class Manager(object):
         *field* must exist in all objects passed/selected in *obj*.
 
         :param obj: Object(s)
-        :type obj: int or list(int) or list(mask) or list(str) or list(list(str))
+        :type obj: int or list(int) or list(bool) or list(str) or list(list(str))
         :param str field: Field name
         :rtype: str or list(str)
         """

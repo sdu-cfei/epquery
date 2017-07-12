@@ -102,16 +102,16 @@ class IDD(object):
             raise ValueError(msg)
         return fields
 
-    def get_field_names(self, obj):
+    def get_field_names(self, obj_type):
         """
         Returns field names of the object, i.e. '\\field' descriptions
         of fields A1, A2, ..., N1, N2, ...
 
-        :param str obj: Object name
+        :param str obj_type: Object type
         :rtype: list(str) 
         """
-        field_ids = self.get_field_ids(obj)
-        obj_dict = self._get_object(obj)
+        field_ids = self.get_field_ids(obj_type)
+        obj_dict = self._get_object(obj_type)
         fields = [obj_dict[x] for x in field_ids]
         merged = ""
         for f in fields:
