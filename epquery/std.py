@@ -10,7 +10,7 @@ import numpy as np
 from collections import OrderedDict
 import math
 
-# Template functions for Manager.apply()
+# Standard functions for Manager.apply()
 # =============================================================
 
 def comment(objects):

@@ -10,4 +10,4 @@ from epquery.manager import Manager
 from epquery.editor import Editor
 from epquery.idd import IDD
 from epquery.idf import IDF
-from epquery import templates
+from epquery import std
