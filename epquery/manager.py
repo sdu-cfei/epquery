@@ -12,13 +12,9 @@ import copy
 import tempfile
 import shutil
 import os
-try:
-    from fuzzywuzzy import fuzz
-except ImportError:
-    logger.warning('fuzzywuzzy package not found. Fuzzy searches are DISABLED.')
-import idd
-import idf
-import utilities
+from epquery import idd
+from epquery import idf
+from epquery import utilities
 
 
 class Manager(object):
@@ -41,36 +37,26 @@ class Manager(object):
         self.idf = idf.IDF(idf_path)
         self.idd = idd.IDD(idd_path)
 
-    def query(self, keyword, method='exact', score=85, **kwargs):
+    def query(self, keyword, method='exact', **kwargs):
         """
         Returns objects based on given criteria.
         Supports exact matches (*method*='exact'), substring matches
-        (*method*='substring'), word matches (*method*='words') 
-        and fuzzy matches (*method*='fuzzy').
+        (*method*='substring'), word matches (*method*='words').
 
         All methods convert the letters to uppercase before 
         comparing strings, so 'woRd'=='WorD' is True.
-
-        The fuzzy search method depends on the *fuzzywuzzy* package.
-        If it's not installed, the fuzzy search is disabled, but
-        EPQuery can still be used.
-
-        The fuzzy search method is good for exploring the IDF file, 
-        but its output is unpredictable so it's advised to use one of 
-        the other three methods for the actual IDF manipulation.
 
         *kwargs* represents field descriptors from IDD (``\\field``).
         If a descriptor contains space, replace it with underscore.
 
         :param str keyword: Unique keyword defining object type, e.g. 'Zone'
-        :param str method: Search method ('exact', 'substring', 'words' or 'fuzzy')
-        :param int score: Fuzzy score limit (0-100), only if *method* is 'fuzzy'
+        :param str method: Search method ('exact', 'substring' or 'words')
         :param kwargs: Field types and required values
         :rtype: list(list(str))
 
         Example:
         >>> man = Manager('path_to_IDF', 'path_to_IDD')
-        >>> objects = idf.query('Zone', method='fuzzy',
+        >>> objects = idf.query('Zone', method='words',
                                 Name='Zone1',
                                 Floor_Area=33.5)
         """
@@ -96,8 +82,6 @@ class Manager(object):
                     if word.upper() not in v2.upper():
                         match = False
                 return match
-            elif method == 'fuzzy':
-                return True if (fuzz.ratio(v1.upper(), v2.upper()) > score) else False
             else:
                 logger.error('Unknown compare method: %s', method)
                 None
@@ -154,7 +138,7 @@ class Manager(object):
 
         return matched
 
-    def mask(self, keyword, method='exact', score=85, inverse=False, **kwargs):
+    def mask(self, keyword, method='exact', inverse=False, **kwargs):
         """
         Same as *query()*, but returns a mask (list of bools).
         The mask represents a list of object matches. It can
@@ -166,8 +150,7 @@ class Manager(object):
         * select some objects and print IDF without them (*inverse*=False)
 
         :param str keyword: Unique keyword defining object type, e.g. 'Zone'
-        :param str method: Search method ('exact', 'substring' or 'fuzzy')
-        :param int score: Fuzzy score limit (0-100), only if *method* is 'fuzzy'
+        :param str method: Search method ('exact', 'substring' or 'words')
         :param bool inverse: If True, the mask is inversed
         :param kwargs: Field types and required values
         :rtype: list(bool)
@@ -175,7 +158,7 @@ class Manager(object):
         logger.debug('Applying mask with parameters: keyword=%s, method=%s, inverse=%s and **kwargs',
                      keyword, method, inverse)
 
-        matched = self.query(keyword, method, score, **kwargs)
+        matched = self.query(keyword, method, **kwargs)
         objects = self.idf.get_objects()
 
         logger.debug('Number of found matches: %d', len(matched))
@@ -365,6 +348,46 @@ class Manager(object):
         else:
             return False
 
+    def get_index(self, obj_type, method='exact', flatten=True, **kwargs):
+        """
+        Returns index of the object. If more than one object is found, returns a list
+        of indices. If *flatten* is False, then returns list of ints even if only
+        one object was found (single-element list). Returns None if no object
+        matches the criteria.
+
+        :param str obj_type: Object type
+        :param str method: Search method used in the query ('exact', 'words', 'substring')
+        :param kwargs: Field names and values
+        :rtype: int or list(int) or None
+        """
+        mask = self.mask(obj_type, method, **kwargs)
+        index = [x for x, y in enumerate(mask) if y is True]
+        
+        if len(index) == 0:
+            logger.warning('No object matched the query. get_index() returns None.')
+            return None
+        elif len(index) == 1 and flatten is True:
+            return index[0]
+        else:
+            return index
+
+    def set_field(self, index, **kwargs):
+        """
+        Sets a new value(s) to the object field(s). The object
+        is identified by its *index*. Field names and values
+        are passed in *kwargs*. If a field name contains a white
+        space, replace it with an underscore. All field names
+        must exist in the selected object.
+
+        The method works only with a single object.
+
+        :param int index: Object index
+        :param kwargs: Field names and new values
+        :returns: A copy of the new object
+        :rtype: list(str)
+        """
+        pass  # TODO: implement
+
     def get_field(self, obj, field, flatten=True):
         """
         Generic function for retrieving field values from
@@ -377,7 +400,8 @@ class Manager(object):
         depending on how many objects are in *obj* and on *flatten*.
         The parameter *flatten* contols the return type in case
         a single object is passed in *obj*. If it's *False*, the
-        return value is a single-element list (with a string).
+        return value is a single-element list (with a string). Otherwise
+        it's just a string.
 
         *field* must exist in all objects passed/selected in *obj*.
 
@@ -551,11 +575,4 @@ class Manager(object):
         # Save FMU
         fmu = utilities.create_fmu(script, self.idd.path, epw, idf)
 
-        # Move FMU if needed
-        out_fmu = os.path.join(directory, fmu.split(os.sep)[-1])
-        if directory != os.getcwd():
-            if os.path.exists(out_fmu):
-                os.remove(out_fmu)
-            shutil.move(fmu, directory)
-
-        return out_fmu
+        return fmu

@@ -1,8 +1,8 @@
 import logging
 logger = logging.getLogger(__name__)
-from manager import Manager
 import numpy as np
-import utilities
+from epquery.manager import Manager
+from epquery import utilities
 
 
 class Editor(Manager):

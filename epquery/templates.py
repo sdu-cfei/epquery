@@ -47,13 +47,14 @@ def delete(objects):
     return d
 
 
-def interface_schedule(objects, manager):
+def interface_schedule(objects, manager, init_val=0):
     """
     Returns external interface objects for schedules.
 
     :param objects: Objects to be moved to the interface
     :type objects: list(list(str))
     :param Manager manager: Manager instance
+    :param float init_val: Initial value of the schedule
     :rtype: list(list(str))
 
     Template::
@@ -73,7 +74,7 @@ def interface_schedule(objects, manager):
         t.append("{}".format(name))
         t.append("{}".format(manager.get_field(obj, 'Schedule Type Limits Name')))
         t.append("{}".format(name.replace(' ', '_')))
-        t.append("{}".format(0))
+        t.append("{}".format(init_val))  # Initial value
         intf.append(t)
 
     return intf
