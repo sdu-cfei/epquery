@@ -40,3 +40,43 @@ class ExtInterface(BasicEdit):
             self.add_objects(intf)
 
         return intf
+
+    def output_to_interface(self, mask, key_values, inplace=True):
+        """
+        Returns external interface objects for Output:Variable.
+
+        .. warning::
+
+            Currently, the method only supports Output:Variable objects
+            defined in IDF with *key value* = \*. The argument *key_values*
+            is used to expand the interface to all needed objects.
+
+        :param mask: Mask with selected outputs
+        :type mask: list(bool)
+        :param key_values: Key values from Output:Variable after expanding \*
+        :type key_values: list(str)
+        :param bool inplace: If True, original schedules are commented and new are added in place
+        :returns: Schedules interface objects
+        :rtype: list(list(str))
+        """
+        # TODO: Add support for Output:Variable with explicitly defined key name (not '*')
+
+        intf = list()
+
+        outvars = self.filter(mask)
+
+        for obj in outvars:
+            for name in key_values:
+                var_name = self.get_field(obj, 'Variable Name')
+                fmu_var_name = var_name.replace(' ', '_') + '_' + name.replace(' ', '_')
+                t = list()
+                t.append("ExternalInterface:FunctionalMockupUnitExport:From:Variable")
+                t.append("{}".format(name))         # Output:Variable Index Key Name
+                t.append("{}".format(var_name))     # Output:Variable Name
+                t.append("{}".format(fmu_var_name)) # FMU Variable Name
+                intf.append(t)
+
+        if inplace:
+            self.add_objects(intf)
+
+        return intf
