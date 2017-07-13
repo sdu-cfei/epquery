@@ -1,10 +1,25 @@
 from epquery import BasicEdit
+from epquery import utilities
 
 
-class GeomEdit(BasicEdit):
+class Geometry(BasicEdit):
     """
     Geometry specific methods.
     """
+
+    def get_surface_area(self, surface_name, surface_type='BuildingSurface:Detailed'):
+        """
+        Returns the surface area.
+
+        :param str surface_name: Surface name
+        :param str surface_type: Surface type, default: BuildingSurface:Detailed
+        :returns: List of vertices (list of tuples with x, y, z)
+        :rtype: list(tuple(float, float, float))
+        """
+        vertices = self.get_surface_vertices(surface_name, surface_type)
+
+        # TODO: convert 3D polygon to 2D and use utilities.polygon_area()
+        raise NotImplemented('Method not implemented yet')
 
     def get_surface_vertices(self, surface_name, surface_type='BuildingSurface:Detailed'):
         """
