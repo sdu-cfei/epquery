@@ -4,6 +4,23 @@ from epquery import utilities
 
 class ExtInterface(BasicEdit):
 
+    def add_external_interface(self):
+        """
+        Adds external interface object *IN PLACE*.
+        The object is added at the end of the current IDF.
+        Returns the copy of this object.
+
+        :returns: A copy of external interface object
+        :rtype: list(str)
+        """
+        ext_interface = list([
+            "ExternalInterface",
+            "FunctionalMockupUnitExport"
+        ])
+        self.add_object(ext_interface)
+        
+        return ext_interface
+
     def schedule_to_interface(self, mask, init_val=0, inplace=True):
         """
         Returns external interface objects for schedules.

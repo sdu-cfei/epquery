@@ -276,19 +276,3 @@ def daylighting_controls(objects, editor):
         ctrl[-1].append('500') # Illuminance setpoint
 
     return ctrl
-
-
-# Other template functions
-# =============================================================
-
-def external_interface_header():
-    """
-    Returns object representing external interface header.
-
-    :rtype: list(str)
-    """
-    ext_interface = list([
-        "ExternalInterface",
-        "FunctionalMockupUnitExport"
-    ])
-    return ext_interface
