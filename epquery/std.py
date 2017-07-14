@@ -83,37 +83,6 @@ def daylighting_ref_pts(objects, editor):
     return ref_pts
 
 
-def schedule_file(objects, editor):
-    """
-    Returns Schedule:File objects for all *objects*.
-    Compatible object types:
-    Lights, People, ElectricEquipment, ZoneInfiltration:DesignFlowRate
-
-    :param objects: Compatible objects (see above)
-    :param Editor editor: Editor instance
-    :rtype: list(list(str))
-    """
-    sch = list()
-
-    for obj in objects:
-        obj_type = obj[0]
-        sch_field_name = 'Number of People Schedule Name' if obj_type == 'People' else 'Schedule Name'
-        sch_name = editor.get_field(obj, sch_field_name)
-        
-        sch.append(list())
-        sch[-1].append("Schedule:File")
-        sch[-1].append(sch_name)
-        sch[-1].append('ActivityLevel')
-        sch[-1].append('mock_schedule.csv')
-        sch[-1].append('2')
-        sch[-1].append('0')
-        sch[-1].append('8760')
-        sch[-1].append('Comma')
-        sch[-1].append('No')
-    
-    return sch
-
-
 def lights(objects, editor):
     """
     Returns lights definitions for all zones in *objects*.
