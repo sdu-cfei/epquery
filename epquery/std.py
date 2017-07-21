@@ -10,8 +10,10 @@ import numpy as np
 from collections import OrderedDict
 import math
 
-# Standard functions for Manager.apply()
-# =============================================================
+######################################################################
+# ALL FUNCTIONS FROM THIS MODULE ARE TO BE MOVED TO THE SPECIALIZED  #
+# CLASSES IN epquery.edit                                            #
+######################################################################
 
 def daylighting_ref_pts(objects, editor):
     """
