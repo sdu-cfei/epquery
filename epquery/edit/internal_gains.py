@@ -10,9 +10,10 @@ class InternalGains(BasicEdit):
         Adds these objects to IDF if *inplace* is *True*.
         Object names are constructed as "Lights Zone Name".
 
-        .. note::
+        .. warning::
 
-            Fields in this template need to be modified manually.
+            Fields in this template need to be modified manually
+            at the moment.
 
         :param mask: Mask with selected zones
         :type mask: list(bool)
@@ -20,6 +21,7 @@ class InternalGains(BasicEdit):
         :rtype: list(list(str))
         """
         # TODO: Fields in this methods have to be given by the user and not be static
+        # TODO: use BasicEdit.create_object()
 
         lights = list()
 
