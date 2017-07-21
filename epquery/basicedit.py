@@ -12,6 +12,7 @@ import copy
 import tempfile
 import shutil
 import os
+import collections
 from epquery import idd
 from epquery import idf
 from epquery import utilities
@@ -37,6 +38,49 @@ class BasicEdit(object):
         :rtype: str
         """
         return self.idd.get_object_info(obj_type)
+
+    def create_object(self, obj_type, inplace=False, **kwargs):
+        """
+        Creates and returns a new object of type *obj_type* with fields
+        defined by *kwargs*. All fields defined in IDD for that particular
+        object have to be provided in *kwargs*.
+        Spaces in field names have to be repaced with underscores.
+
+        .. note::
+
+            The method does not work with expandable objects
+            with unnamed fields.
+
+        .. note::
+
+            The method does not work with objects with fields
+            containing special characters, because they cannot
+            be used in *kwargs*.
+
+        :param str obj_type: Object type, e.g. 'Schedule:File'
+        :param kwargs: Field names and values
+        :param bool inplace: If True, the object is appended to the IDF
+        :return: New object
+        :rtype: list(str)
+        """
+        # TODO: Add field matching based on fuzzywuzzy,
+        #       which would solve the issue of special characters
+
+        # TODO: This method has not been tested yet
+
+        field_names = self.idd.get_field_names(obj_type)
+        assert set(field_names) == set(kwargs.keys()), '[create_object] Fields and kwargs do not match...'
+
+        obj = list()
+        obj.append(obj_type)
+
+        for field in field_names:
+            obj.append(kwargs[field.replace('_', ' ')])
+
+        if inplace:
+            self.add_object(obj)
+
+        return obj
 
     def query(self, keyword, method='exact', **kwargs):
         """
@@ -315,12 +359,12 @@ class BasicEdit(object):
         deleted = list()
         for i in sorted(index, reverse=True):
             deleted.append(self.idf.idf.pop(i))
-        
+
         return deleted
 
     def add_object(self, obj, index=None):
         """
-        Adds EnergyPlus object to the IDF.
+        Adds a single EnergyPlus object to the IDF.
         If *index* is None, the object is appended
         to the end of IDF. Otherwise it's inserted
         at *index* (using list.insert()).
@@ -346,55 +390,6 @@ class BasicEdit(object):
         for obj in objects:
             self.add_object(obj)
         return None
-
-    def delete_object(self, keyword, **kwargs):
-        """
-        Deletes object *IN PLACE*. Object has to be uniquely
-        identified by keyword and *kwargs*.
-
-        Both keyword and kwargs are converted to upper case
-        before searching for the object. Only one pair of
-        *kwargs* is allowed. Field name should have underscores
-        instead of spaces.
-
-        .. warning::
-
-            This method is not optimized and can be computationally
-            expensive for large IDF files.
-
-        :param str keyword: Object type (e.g. 'Schedule:File')
-        :param str kwargs: Field name and value
-        :returns: True if object found and deleted, False otherwise
-        :rtype: bool
-        """
-        assert len(kwargs) == 1, 'Only one pair of kwargs allowed'
-
-        old_objects = self.idf.get_objects()
-        new_objects = list()
-
-        field_name = kwargs.keys()[0]
-        field_val = kwargs[field_name]
-
-        found = False
-        for obj in old_objects:
-            obj_type = obj[0]
-            match1 = keyword.upper() == obj_type.upper()
-            if field_name.replace('_', ' ') in self.idd.get_field_names(obj_type):
-                match2 = self.get_field(obj, 'Name').upper() == field_val.upper()
-            else:
-                match2 = False
-            if match1 and match2:
-                found = True
-                pass  # This is the object to be deleted, so don't append
-            else:
-                new_objects.append(obj)
-
-        if found is True:
-            self.idf.idf = new_objects
-            logger.info('Object deleted: {}'.format(field_val))
-            return True
-        else:
-            return False
 
     def get_index(self, obj_type, method='exact', flatten=True, **kwargs):
         """

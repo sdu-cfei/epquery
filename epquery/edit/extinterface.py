@@ -24,7 +24,7 @@ class ExtInterface(BasicEdit):
     def schedule_to_interface(self, mask, init_val=0, inplace=True):
         """
         Returns external interface objects for schedules.
-        Does not add the new objects to the IDF.
+        Adds the objects to the IDF if *inplace* is *True*.
 
         .. warning::
 
