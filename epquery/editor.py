@@ -1,3 +1,4 @@
+from epquery import log_init
 import logging
 logger = logging.getLogger(__name__)
 import numpy as np

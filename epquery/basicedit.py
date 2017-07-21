@@ -13,6 +13,7 @@ import tempfile
 import shutil
 import os
 import collections
+from fuzzywuzzy import fuzz
 from epquery import idd
 from epquery import idf
 from epquery import utilities
@@ -42,20 +43,17 @@ class BasicEdit(object):
     def create_object(self, obj_type, inplace=False, **kwargs):
         """
         Creates and returns a new object of type *obj_type* with fields
-        defined by *kwargs*. All fields defined in IDD for that particular
-        object have to be provided in *kwargs*.
-        Spaces in field names have to be repaced with underscores.
+        defined by *kwargs*. Fields not provided in *kwargs* are assumed
+        to have no value. Spaces in the field names have to be replaced with
+        underscores. Field names with special characters have to be provided
+        without them, trying to match the name as close as possible, e.g.
+        instead of 'Output:Variable Index Key Name'
+        write 'OutputVariable_Index_Key_Name' (no semicolon, spaces to underscores).
 
-        .. note::
+        .. warning::
 
-            The method does not work with expandable objects
+            The method may not work with expandable objects
             with unnamed fields.
-
-        .. note::
-
-            The method does not work with objects with fields
-            containing special characters, because they cannot
-            be used in *kwargs*.
 
         :param str obj_type: Object type, e.g. 'Schedule:File'
         :param kwargs: Field names and values
@@ -63,19 +61,53 @@ class BasicEdit(object):
         :return: New object
         :rtype: list(str)
         """
-        # TODO: Add field matching based on fuzzywuzzy,
-        #       which would solve the issue of special characters
-
-        # TODO: This method has not been tested yet
+        logger.info('Creating new object: {}'.format(obj_type))
 
         field_names = self.idd.get_field_names(obj_type)
-        assert set(field_names) == set(kwargs.keys()), '[create_object] Fields and kwargs do not match...'
+        field_names = [f.upper() for f in field_names]
 
+        # Replace underscores in kwargs with spaces
+        kwargs = {key.replace('_', ' '): kwargs[key] for key in kwargs}
+
+        # Convert to upper case
+        kwargs = {key.upper(): kwargs[key] for key in kwargs}
+
+        # Field names in kwargs may be slightly different than in IDD,
+        # because special characters cannot be used in argument names,
+        # therefore a mapping is needed
+        logger.debug('Mapping fields from kwargs with IDD...')
+        values = dict()
+        for f in field_names:
+            logger.debug('Processing field: {}'.format(f))
+            if f in kwargs:
+                logger.debug("Field '{}' found in kwargs".format(f))
+                values[f] = kwargs[f]
+            else:
+                # Find closest match
+                logger.debug("Field '{}' not found in kwargs, looking for closest match...".format(f))
+                best = None
+                score = 0
+                for k in kwargs:
+                    ratio = fuzz.ratio(f, k)
+                    logger.debug("Comparing with '{}', score={}".format(k, ratio))
+                    if ratio > score:
+                        best = k
+                        score = ratio
+                # Assign only if found reasonably good match
+                if (best is not None) and (score > 50):
+                    logger.debug("Found reasonable match between '{}' and '{}'".format(f, best))
+                    values[f] = kwargs[best]
+                else:
+                    # Empty value if no good match
+                    logger.debug("Did not find reasonable match, assigning empty string")
+                    values[f] = ''
+
+        # Make object
         obj = list()
         obj.append(obj_type)
 
-        for field in field_names:
-            obj.append(kwargs[field.replace('_', ' ')])
+        for f in field_names:
+            obj.append(values[f])
 
         if inplace:
             self.add_object(obj)
