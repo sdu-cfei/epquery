@@ -2,6 +2,6 @@
 Package with specialized IDF editing classes.
 """
 
-from extinterface import ExtInterface
-from geometry import Geometry
-from schedule import Schedule
+from epquery.edit.extinterface import ExtInterface
+from epquery.edit.geometry import Geometry
+from epquery.edit.schedule import Schedule
