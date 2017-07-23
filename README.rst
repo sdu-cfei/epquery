@@ -24,6 +24,11 @@ from the project directory:
     cd epquery
     pip install . 
 
+Documentation
+=============
+
+The documentation is hosted on GitHub Pages:  `https://sdu-cfei.github.io/epquery <https://sdu-cfei.github.io/epquery>`_
+
 Author
 ======
 
