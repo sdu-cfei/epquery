@@ -12,7 +12,7 @@ Welcome to EPQuery's documentation!
    :maxdepth: 2
 
    installation
-   editor
+   Editor API <editor>
 
 Indices and tables
 ==================

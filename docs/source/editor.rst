@@ -3,7 +3,6 @@
 Editor
 ======
 
-.. automodule:: epquery.editor
+.. autoclass:: epquery.Editor
     :members:
-    :special-members:
-    :private-members:
+    :inherited-members:
