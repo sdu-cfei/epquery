@@ -6,11 +6,13 @@
 Welcome to EPQuery's documentation!
 ===================================
 
+**Contents:**
+
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
-
+   installation
+   editor
 
 Indices and tables
 ==================
