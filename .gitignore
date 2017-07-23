@@ -5,3 +5,4 @@
 *.txt
 Output_EPExport_Slave/
 epquery.egg-info/
+docs/build/
