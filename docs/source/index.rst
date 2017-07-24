@@ -14,6 +14,8 @@ Welcome to EPQuery's documentation!
    installation
    Editor API <editor>
 
+.. BUG: For some reason 'Editor API' shows with 'no title' in the side bar
+
 Indices and tables
 ==================
 

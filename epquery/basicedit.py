@@ -136,10 +136,12 @@ class BasicEdit(object):
         :rtype: list(list(str))
 
         Example:
-        >>> ep = BasicEdit('path_to_IDF', 'path_to_IDD')
-        >>> objects = ep.query('Zone', method='words',
-                                Name='Zone1',
-                                Floor_Area=33.5)
+        
+        .. code::
+
+            >>> ep = BasicEdit('path_to_IDF', 'path_to_IDD')
+            >>> objects = ep.query('Zone', method='words', Name='Zone1', Floor_Area=33.5)
+        
         """
         fields = self.idd.get_field_names(keyword)
 
@@ -227,8 +229,8 @@ class BasicEdit(object):
 
         This method is useful if you need to: 
         
-        * select some objects and get their indexes
-        * select some objects and print IDF without them (*inverse*=False)
+        - select some objects and get their indexes
+        - select some objects and print IDF without them (*inverse*=False)
 
         :param str keyword: Unique keyword defining object type, e.g. 'Zone'
         :param str method: Search method ('exact', 'substring' or 'words')
