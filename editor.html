@@ -1,0 +1,702 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Editor &#8212; EPQuery 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="License" href="license.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="license.html" title="License"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installation"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">EPQuery 0.0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="editor">
+<span id="id1"></span><h1>Editor<a class="headerlink" href="#editor" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="epquery.Editor">
+<em class="property">class </em><code class="descclassname">epquery.</code><code class="descname">Editor</code><span class="sig-paren">(</span><em>idf_path</em>, <em>idd_path</em><span class="sig-paren">)</span><a class="headerlink" href="#epquery.Editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>High-level API for editing IDF files.</p>
+<dl class="method">
+<dt id="epquery.Editor.add_external_interface">
+<code class="descname">add_external_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#epquery.Editor.add_external_interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds external interface object <em>IN PLACE</em>.
+The object is added at the end of the current IDF.
+Returns the copy of this object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A copy of external interface object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list(str)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="epquery.Editor.add_object">
+<code class="descname">add_object</code><span class="sig-paren">(</span><em>obj</em>, <em>index=None</em><span class="sig-paren">)</span><a class="headerlink" href="#epquery.Editor.add_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a single EnergyPlus object to the IDF.
+If <em>index</em> is None, the object is appended
+to the end of IDF. Otherwise it’s inserted
+at <em>index</em> (using list.insert()).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> (<em>list</em><em>(</em><em>str</em><em>)</em>) – EnergyPlus object representation</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="epquery.Editor.add_objects">
+<code class="descname">add_objects</code><span class="sig-paren">(</span><em>objects</em><span class="sig-paren">)</span><a class="headerlink" href="#epquery.Editor.add_objects" title="Permalink to this definition">¶</a></dt>
+<dd><p>Appends IDF <em>IN PLACE</em> with EnergyPlus objects stored
+in <em>objects</em>. Unlike in <em>add_object</em>, index cannot be
+defined by the user. All objects are simply added to
+the end of IDF.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>objects</strong> (<em>list</em><em>(</em><em>list</em><em>(</em><em>str</em><em>)</em><em>)</em>) – Objects to be added</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="epquery.Editor.apply">
+<code class="descname">apply</code><span class="sig-paren">(</span><em>func</em>, <em>mask</em>, <em>inplace=True</em>, <em>args=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#epquery.Editor.apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies function <em>func</em> to the passed mask.</p>
+<p>If <em>inplace</em> is True, modifications are applied <em>IN PLACE</em> 
+to objects selected in the mask as True. In addition the modified 
+objects are returned by this function. If <em>inplace</em> is False,
+then no in place modifications are performed and the modified
+objects are just returned.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>func</strong> (<em>function</em>) – Function to be applied</li>
+<li><strong>mask</strong> (<em>list</em><em>(</em><em>bool</em><em>)</em>) – List of booleans, result of <em>query_mask</em></li>
+<li><strong>inplace</strong> (<em>bool</em>) – Flag for in-place modification</li>
+<li><strong>args</strong> (<em>list</em>) – Any other parameters to be passed to <em>func</em></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list(list(str))</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="epquery.Editor.comment">
+<code class="descname">comment</code><span class="sig-paren">(</span><em>mask</em><span class="sig-paren">)</span><a class="headerlink" href="#epquery.Editor.comment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Puts ‘!=’ in the begining of each line of the selected objects.
+Edits <em>IN PLACE</em> and returns the commented objects.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Currently, commented objects cannot be uncommented!
+It is because they cannot be located by query(),
+which searches for objects compliant with IDD. Also,
+all comment in IDF files are deleted during parsing.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mask</strong> (<em>list</em><em>(</em><em>bool</em><em>)</em>) – Objects to be commented out</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Commented objects</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list(list(str))</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="epquery.Editor.create_object">
+<code class="descname">create_object</code><span class="sig-paren">(</span><em>obj_type</em>, <em>inplace=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#epquery.Editor.create_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates and returns a new object of type <em>obj_type</em> with fields
+defined by <em>kwargs</em>. Fields not provided in <em>kwargs</em> are assumed
+to have no value. Spaces in the field names have to be replaced with
+underscores. Field names with special characters have to be provided
+without them, trying to match the name as close as possible, e.g.
+instead of ‘Output:Variable Index Key Name’
+write ‘OutputVariable_Index_Key_Name’ (no semicolon, spaces to underscores).</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The method may not work with expandable objects
+with unnamed fields.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obj_type</strong> (<em>str</em>) – Object type, e.g. ‘Schedule:File’</li>
+<li><strong>kwargs</strong> – Field names and values</li>
+<li><strong>inplace</strong> (<em>bool</em>) – If True, the object is appended to the IDF</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">New object</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list(str)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="epquery.Editor.definition_to_schedule_file">
+<code class="descname">definition_to_schedule_file</code><span class="sig-paren">(</span><em>mask</em>, <em>file_name</em>, <em>column_number</em>, <em>inplace=True</em><span class="sig-paren">)</span><a class="headerlink" href="#epquery.Editor.definition_to_schedule_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates Schedule:File objects for all objects selected in <em>mask</em>.
+Adds the schedules to the IDF if <em>inplace</em> is True.
+Returns the created schedule objects.</p>
+<p>Compatible definition objects:
+Lights, People, ElectricEquipment, ZoneInfiltration:DesignFlowRate</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>mask</strong> (<em>list</em><em>(</em><em>bool</em><em>)</em>) – Selected definition objects</li>
+<li><strong>file_name</strong> (<em>str</em>) – Schedule file name</li>
+<li><strong>column_number</strong> (<em>int</em>) – Column number</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A copy of the schedule objects</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list(list(str))</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="epquery.Editor.filter">
+<code class="descname">filter</code><span class="sig-paren">(</span><em>mask</em>, <em>ignore_index=True</em><span class="sig-paren">)</span><a class="headerlink" href="#epquery.Editor.filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns objects for which mask elements are True.
+Does not change the self-stored IDF.</p>
+<p>Index can be ignored. By doing so the resulting list
+includes only matching objects (those where mask is True).
+Otherwise None is put where mask is False. It can be useful
+if the original object positions are to be preserved.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>mask</strong> (<em>list</em><em>(</em><em>bool</em><em>)</em>) – Mask</li>
+<li><strong>ignore_index</strong> (<em>bool</em>) – If False, not matching objects are stored as None</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">List of objects</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list(list(str))</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="epquery.Editor.get_field">
+<code class="descname">get_field</code><span class="sig-paren">(</span><em>obj</em>, <em>field</em>, <em>flatten=True</em><span class="sig-paren">)</span><a class="headerlink" href="#epquery.Editor.get_field" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generic function for retrieving field values from
+one or more objects defined by <em>obj</em>.</p>
+<p><em>obj</em> can be an index to an object, a list of indexes,
+a mask (list of bools), an actual object (list of str),
+or a list of objects (list of list of str). The returned
+field can be a single value or a list of values,
+depending on how many objects are in <em>obj</em> and on <em>flatten</em>.
+The parameter <em>flatten</em> contols the return type in case
+a single object is passed in <em>obj</em>. If it’s <em>False</em>, the
+return value is a single-element list (with a string). Otherwise
+it’s just a string.</p>
+<p><em>field</em> must exist in all objects passed/selected in <em>obj</em>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obj</strong> (<em>int</em><em> or </em><em>list</em><em>(</em><em>int</em><em>) or </em><em>list</em><em>(</em><em>bool</em><em>) or </em><em>list</em><em>(</em><em>str</em><em>) or </em><em>list</em><em>(</em><em>list</em><em>(</em><em>str</em><em>)</em><em>)</em>) – Object(s)</li>
+<li><strong>field</strong> (<em>str</em>) – Field name</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str or list(str)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="epquery.Editor.get_index">
+<code class="descname">get_index</code><span class="sig-paren">(</span><em>obj_type</em>, <em>method=’exact’</em>, <em>flatten=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#epquery.Editor.get_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns index of the object. If more than one object is found, returns a list
+of indices. If <em>flatten</em> is False, then returns a list even if only
+one object is found (single-element list). Returns None if no object
+matches the criteria.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obj_type</strong> (<em>str</em>) – Object type</li>
+<li><strong>method</strong> (<em>str</em>) – Search method used in the query (‘exact’, ‘words’, ‘substring’)</li>
+<li><strong>kwargs</strong> – Field names and values</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">int or list(int) or None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="epquery.Editor.get_object_info">
+<code class="descname">get_object_info</code><span class="sig-paren">(</span><em>obj_type</em><span class="sig-paren">)</span><a class="headerlink" href="#epquery.Editor.get_object_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns object information based on the IDD file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj_type</strong> (<em>str</em>) – Object type, e.g. ‘Zone’</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="epquery.Editor.get_surface_area">
+<code class="descname">get_surface_area</code><span class="sig-paren">(</span><em>surface_name</em>, <em>surface_type=’BuildingSurface:Detailed’</em><span class="sig-paren">)</span><a class="headerlink" href="#epquery.Editor.get_surface_area" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the surface area.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>surface_name</strong> (<em>str</em>) – Surface name</li>
+<li><strong>surface_type</strong> (<em>str</em>) – Surface type, default: BuildingSurface:Detailed</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">List of vertices (list of tuples with x, y, z)</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list(tuple(float, float, float))</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="epquery.Editor.get_surface_centroid">
+<code class="descname">get_surface_centroid</code><span class="sig-paren">(</span><em>surface_name</em>, <em>surface_type=’BuildingSurface:Detailed’</em>, <em>relative=False</em><span class="sig-paren">)</span><a class="headerlink" href="#epquery.Editor.get_surface_centroid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the surface center point (centroid). The centroid can be in absolute
+or relative coordinates (relative to the first vertex).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>surface_name</strong> (<em>str</em>) – Surface name</li>
+<li><strong>surface_type</strong> (<em>str</em>) – Surface type, default: BuildingSurface:Detailed</li>
+<li><strong>relative</strong> (<em>bool</em>) – If <em>True</em> the centroid is given in relative coordinates</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy.ndarray with 3 elements</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="epquery.Editor.get_surface_vertices">
+<code class="descname">get_surface_vertices</code><span class="sig-paren">(</span><em>surface_name</em>, <em>surface_type=’BuildingSurface:Detailed’</em><span class="sig-paren">)</span><a class="headerlink" href="#epquery.Editor.get_surface_vertices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of vertices defining the surface.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>surface_name</strong> (<em>str</em>) – Surface name</li>
+<li><strong>surface_type</strong> (<em>str</em>) – Surface type, default: BuildingSurface:Detailed</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">List of vertices (list of tuples with x, y, z)</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list(tuple(float, float, float))</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="epquery.Editor.mask">
+<code class="descname">mask</code><span class="sig-paren">(</span><em>keyword</em>, <em>method=’exact’</em>, <em>inverse=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#epquery.Editor.mask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as <em>query()</em>, but returns a mask (list of bools).
+The mask represents a list of object matches. It can
+be then applied on IDF objects using <em>apply_mask()</em>.</p>
+<p>This method is useful if you need to:</p>
+<ul class="simple">
+<li>select some objects and get their indexes</li>
+<li>select some objects and print IDF without them (<a href="#id2"><span class="problematic" id="id3">*</span></a>inverse*=False)</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>keyword</strong> (<em>str</em>) – Unique keyword defining object type, e.g. ‘Zone’</li>
+<li><strong>method</strong> (<em>str</em>) – Search method (‘exact’, ‘substring’ or ‘words’)</li>
+<li><strong>inverse</strong> (<em>bool</em>) – If True, the mask is inversed</li>
+<li><strong>kwargs</strong> – Field types and required values</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list(bool)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="epquery.Editor.output_to_interface">
+<code class="descname">output_to_interface</code><span class="sig-paren">(</span><em>mask</em>, <em>key_values</em>, <em>inplace=True</em><span class="sig-paren">)</span><a class="headerlink" href="#epquery.Editor.output_to_interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns external interface objects for Output:Variable.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Currently, the method only supports Output:Variable objects
+defined in IDF with <em>key value</em> = *. The argument <em>key_values</em>
+is used to expand the interface to all needed objects.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>mask</strong> (<em>list</em><em>(</em><em>bool</em><em>)</em>) – Mask with selected outputs</li>
+<li><strong>key_values</strong> (<em>list</em><em>(</em><em>str</em><em>)</em>) – Key values from Output:Variable after expanding *</li>
+<li><strong>inplace</strong> (<em>bool</em>) – If True, original schedules are commented and new are added in place</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Schedules interface objects</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list(list(str))</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="epquery.Editor.query">
+<code class="descname">query</code><span class="sig-paren">(</span><em>keyword</em>, <em>method=’exact’</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#epquery.Editor.query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns objects based on given criteria.
+Supports exact matches (<a href="#id4"><span class="problematic" id="id5">*</span></a>method*=’exact’), substring matches
+(<a href="#id6"><span class="problematic" id="id7">*</span></a>method*=’substring’), word matches (<a href="#id8"><span class="problematic" id="id9">*</span></a>method*=’words’).</p>
+<p>All methods convert the letters to uppercase before 
+comparing strings, so ‘woRd’==’WorD’ is True.</p>
+<p><em>kwargs</em> represents field descriptors from IDD (<code class="docutils literal"><span class="pre">\\field</span></code>).
+If a descriptor contains space, replace it with underscore.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Currently field names with special characters (e.g. {}/\) are not supported.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>keyword</strong> (<em>str</em>) – Unique keyword defining object type, e.g. ‘Zone’</li>
+<li><strong>method</strong> (<em>str</em>) – Search method (‘exact’, ‘substring’ or ‘words’)</li>
+<li><strong>kwargs</strong> – Field types and required values</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list(list(str))</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ep</span> <span class="o">=</span> <span class="n">BasicEdit</span><span class="p">(</span><span class="s1">&#39;path_to_IDF&#39;</span><span class="p">,</span> <span class="s1">&#39;path_to_IDD&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">objects</span> <span class="o">=</span> <span class="n">ep</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;Zone&#39;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;words&#39;</span><span class="p">,</span> <span class="n">Name</span><span class="o">=</span><span class="s1">&#39;Zone1&#39;</span><span class="p">,</span> <span class="n">Floor_Area</span><span class="o">=</span><span class="mf">33.5</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="epquery.Editor.remove">
+<code class="descname">remove</code><span class="sig-paren">(</span><em>mask</em><span class="sig-paren">)</span><a class="headerlink" href="#epquery.Editor.remove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes selected objects <em>IN PLACE</em>. Returns removed objects.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mask</strong> (<em>list</em><em>(</em><em>bool</em><em>)</em>) – Selected objects</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A copy of the deleted objects</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list(list(str))</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="epquery.Editor.schedule_to_interface">
+<code class="descname">schedule_to_interface</code><span class="sig-paren">(</span><em>mask</em>, <em>init_val=0</em>, <em>inplace=True</em><span class="sig-paren">)</span><a class="headerlink" href="#epquery.Editor.schedule_to_interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns external interface objects for schedules.
+Adds the objects to the IDF if <em>inplace</em> is <em>True</em>.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The method does not check if the objects selected in the
+mask are valid schedules. It’s the user responsibility.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>mask</strong> (<em>list</em><em>(</em><em>bool</em><em>)</em>) – Mask with selected schedules</li>
+<li><strong>init_val</strong> (<em>float</em>) – Initial value of the schedule</li>
+<li><strong>inplace</strong> (<em>bool</em>) – If True, original schedules are commented and new are added in place</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Schedules interface objects</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list(list(str))</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="epquery.Editor.set_field">
+<code class="descname">set_field</code><span class="sig-paren">(</span><em>mask</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#epquery.Editor.set_field" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets a new value(s) to the field(s) of the selected objects <em>IN PLACE</em>.
+In addition returns the modified objects.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Does not work with expandable objects with unnamed fields.</p>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Currently field names with special characters (e.g. {}/) are not supported.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>mask</strong> (<em>list</em><em>(</em><em>bool</em><em>)</em>) – Selected objects</li>
+<li><strong>kwargs</strong> – Field names and new values</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A copy of the modified objects</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list(list(str))</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="epquery.Editor.to_fmu">
+<code class="descname">to_fmu</code><span class="sig-paren">(</span><em>script</em>, <em>epw</em>, <em>name=None</em>, <em>directory=None</em><span class="sig-paren">)</span><a class="headerlink" href="#epquery.Editor.to_fmu" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the model to IDF and exports to an FMU using
+EnergyPlusToFMU tool.</p>
+<p>If <em>name</em> and <em>directory</em> are not given, the output files are saved
+in the current working directory with the following names:
+<code class="docutils literal"><span class="pre">out.idf</span></code>, <code class="docutils literal"><span class="pre">out.fmu</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>script</strong> (<em>str</em>) – Path to EnergyPlusToFMU.py</li>
+<li><strong>epw</strong> (<em>str</em>) – Path to EPW weather file</li>
+<li><strong>name</strong> (<em>str</em>) – IDF/FMU file name (without extension), optional</li>
+<li><strong>directory</strong> (<em>str</em>) – Output directory if other than CWD, optional</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Path to the generated FMU</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="epquery.Editor.to_idf">
+<code class="descname">to_idf</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="headerlink" href="#epquery.Editor.to_idf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints IDF object to a file.</p>
+<p>All fields are described  with comments. 
+Comments start with ‘!=’ to distinguish comments 
+added by EPQuery from standard EnergyPlus comments (‘!’)
+or OpenStudio comments (‘!-‘).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> (<em>str</em>) – Path to the output file</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Editor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="installation.html"
+                        title="previous chapter">Installation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="license.html"
+                        title="next chapter">License</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/editor.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="license.html" title="License"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installation"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">EPQuery 0.0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Center for Energy Informatics, University of Southern Denmark.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
+    </div>
+  </body>
+</html>
