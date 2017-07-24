@@ -10,7 +10,7 @@ tasks, like adding new schedules or external interface objects. EPQuery supplies
 for querying the model, selecting different objects and perform basic editing, but the user
 can pass custom functions to be used on the selected objects. 
 
-The project is in the early pre-release stage.
+The project is in the pre-release stage.
 
 Installation
 ============
