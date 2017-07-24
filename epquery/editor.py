@@ -14,6 +14,21 @@ class Editor(
         Schedule
     ):
     """
-    High-level API for editing IDF files.
+    Public API of EPQuery. This class inherits all methods defined in :ref:`BasicEdit`
+    as well as in the :ref:`specialized-classes`.
+    
+    **Examples:**
+
+    1) Select all zones having words `first` and `floor` in their names and then 
+    read get a list with full names of these zones:
+
+    .. code::
+
+        >>> from epquery import Editor
+        >>> ed = Editor(path_to_idf, path_to_idd)
+        >>> mask = ed.mask('Zone', method='words', Name='first floor')
+        >>> names = ed.get_field(mask, 'Name')
+        >>> print(names)
+        ['Living room first floor', 'Hall first floor', 'Bedroom first floor']
     """
     pass

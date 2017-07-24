@@ -3,6 +3,7 @@ from epquery import utilities
 
 
 class InternalGains(BasicEdit):
+    "Methods for internal gains definitions."
 
     def lights(self, mask, inplace=True):
         """
@@ -12,8 +13,8 @@ class InternalGains(BasicEdit):
 
         .. warning::
 
-            Fields in this template need to be modified manually
-            at the moment.
+            This method is not ready for end users. The fields in this template
+            need to be modified manually at the moment.
 
         :param mask: Mask with selected zones
         :type mask: list(bool)

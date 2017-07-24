@@ -15,7 +15,6 @@ from collections import OrderedDict
 class IDF(object):
     """
     This class is used to parse and handle IDF files.
-    It is meant to be used via *Manager*.
     """
 
     def __init__(self, idf_path=None, idf_obj=None):

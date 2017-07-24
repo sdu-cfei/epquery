@@ -13,6 +13,7 @@ from collections import OrderedDict
 
 
 class IDD(object):
+    "IDD parser."
 
     def __init__(self, idd_path):
         """
