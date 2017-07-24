@@ -1,11 +1,12 @@
 .. _License:
 
+=======
 License
 =======
 
 BSD 2-Clause License
 
-Copyright (c) 2017, University of Southern Denmark
+Copyright (c) 2017, University of Southern Denmark,
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

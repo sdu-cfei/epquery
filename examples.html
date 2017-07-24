@@ -1,0 +1,235 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Examples &#8212; EPQuery 0.0.1dev documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1dev',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="How to contribute" href="how-to-contribute.html" />
+    <link rel="prev" title="IDD" href="modules/idd.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="how-to-contribute.html" title="How to contribute"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="modules/idd.html" title="IDD"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">EPQuery 0.0.1dev documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="examples">
+<span id="id1"></span><h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
+<p><strong>Initialization:</strong></p>
+<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">epquery</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idf</span> <span class="o">=</span> <span class="s1">&#39;my_model.idf&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idd</span> <span class="o">=</span> <span class="s1">&#39;Energy+.idd&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ed</span> <span class="o">=</span> <span class="n">epquery</span><span class="o">.</span><span class="n">Editor</span><span class="p">(</span><span class="n">idf</span><span class="p">,</span> <span class="n">idd</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Get zones located in the basement:</strong></p>
+<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">zones</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;Zone&#39;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;words&#39;</span><span class="p">,</span> <span class="n">Name</span><span class="o">=</span><span class="s1">&#39;Basement&#39;</span><span class="p">)</span>  <span class="c1"># Select all zones having word &#39;Basement&#39; in the name</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">zones</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="go">[&#39;Zone&#39;, &#39;Thermal Zone 123 - Basement&#39;, &#39;-0&#39;, &#39;0&#39;, &#39;0&#39;, &#39;0&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;]</span>
+<span class="go">[&#39;Zone&#39;, &#39;Thermal Zone 124 - Basement&#39;, &#39;-0&#39;, &#39;0&#39;, &#39;0&#39;, &#39;0&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;]</span>
+<span class="go">[&#39;Zone&#39;, &#39;Thermal Zone 126 - Basement&#39;, &#39;-0&#39;, &#39;0&#39;, &#39;0&#39;, &#39;0&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;]</span>
+</pre></div>
+</div>
+<p><strong>Get surface names of all surfaces of zone Thermal Zone 123 - Basement:</strong></p>
+<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mask</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">mask</span><span class="p">(</span><span class="s1">&#39;BuildingSurface:Detailed&#39;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;exact&#39;</span><span class="p">,</span> <span class="n">Zone_Name</span><span class="o">=</span><span class="s1">&#39;Thermal Zone 123 - Basement&#39;</span><span class="p">)</span>  <span class="c1"># Select surfaces of the zone &#39;Thermal Zone 123 - Basement&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">surf_names</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;Name&#39;</span><span class="p">)</span>  <span class="c1"># Get names of the selected surfaces</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">surf_names</span><span class="p">)</span>
+<span class="go">[&#39;aim28692 Reversed&#39;, &#39;aim28794&#39;, &#39;aim28805&#39;, &#39;aim28817&#39;, &#39;aim28839&#39;, &#39;aim28851&#39;, &#39;aim28863&#39;, &#39;aim28875&#39;, &#39;aim28887&#39;, &#39;aim28899&#39;, &#39;aim28911&#39;]</span>
+</pre></div>
+</div>
+<p><strong>Get surface vertices of above selected surfaces:</strong></p>
+<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vertices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">surf_names</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">vertices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ed</span><span class="o">.</span><span class="n">get_surface_vertices</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>  <span class="c1"># Get vertices of the surface named *s*</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">surf_names</span><span class="p">,</span> <span class="n">vertices</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+<span class="go">aim28692 Reversed: [(5.336593, 49.91195, 21.21), (5.336593, 49.91195, 17.24), (5.30291, 50.36069, 17.24), (5.30291, 50.36069, 21.21)]</span>
+<span class="go">aim28794: [(5.216085, 51.51743, 17.24), (5.336593, 49.91195, 17.24), (3.546628, 49.7776, 17.24), (3.42612, 51.38308, 17.24)]</span>
+<span class="go">aim28805: [(3.42612, 51.38308, 21.21), (3.42612, 51.38308, 17.24), (3.546628, 49.7776, 17.24), (3.546628, 49.7776, 21.21)]</span>
+<span class="go">aim28817: [(3.546628, 49.7776, 21.21), (3.546628, 49.7776, 17.24), (5.336593, 49.91195, 17.24), (5.336593, 49.91195, 21.21)]</span>
+<span class="go">aim28839: [(5.30291, 50.36069, 21.21), (5.30291, 50.36069, 17.24), (5.216085, 51.51743, 17.24), (5.216085, 51.51743, 21.21)]</span>
+<span class="go">aim28851: [(3.819042, 49.85575, 21.21), (3.823349, 49.79837, 21.21), (3.546628, 49.7776, 21.21), (3.542321, 49.83498, 21.21)]</span>
+<span class="go">aim28863: [(5.216085, 51.51743, 21.21), (5.288876, 50.54766, 21.21), (5.281397, 50.5471, 21.21), (5.208606, 51.51687, 21.21)]</span>
+<span class="go">aim28875: [(5.288876, 50.54766, 21.21), (5.336593, 49.91195, 21.21), (5.329113, 49.91139, 21.21), (5.281397, 50.5471, 21.21)]</span>
+<span class="go">aim28887: [(5.324807, 49.96877, 21.21), (5.329113, 49.91139, 21.21), (3.823349, 49.79837, 21.21), (3.819042, 49.85575, 21.21)]</span>
+<span class="go">aim28899: [(3.542321, 49.83498, 21.21), (5.324807, 49.96877, 21.21), (5.208606, 51.51687, 21.21), (3.42612, 51.38308, 21.21)]</span>
+<span class="go">aim28911: [(5.216085, 51.51743, 21.21), (5.216085, 51.51743, 17.24), (3.42612, 51.38308, 17.24), (3.42612, 51.38308, 21.21)]</span>
+</pre></div>
+</div>
+<p><strong>Add external interface and save new IDF:</strong></p>
+<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ed</span><span class="o">.</span><span class="n">add_external_interface</span><span class="p">()</span>                     <span class="c1"># Add external interface header to IDF</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">zones</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">mask</span><span class="p">(</span><span class="s1">&#39;Zone&#39;</span><span class="p">)</span>                         <span class="c1"># Select all zones</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">zone_names</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">zones</span><span class="p">,</span> <span class="s1">&#39;Name&#39;</span><span class="p">)</span>        <span class="c1"># Get zone names</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">air_temp</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">mask</span><span class="p">(</span><span class="s1">&#39;Output:Variable&#39;</span><span class="p">,</span> <span class="n">Variable_Name</span><span class="o">=</span><span class="s1">&#39;Zone Air Temperature&#39;</span><span class="p">)</span>  <span class="c1"># Select zone air temperature output</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ed</span><span class="o">.</span><span class="n">output_to_interface</span><span class="p">(</span><span class="n">air_temp</span><span class="p">,</span> <span class="n">zone_names</span><span class="p">)</span>    <span class="c1"># Add external interface outputs for all zones</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ed</span><span class="o">.</span><span class="n">to_idf</span><span class="p">(</span><span class="s1">&#39;my_new_model.idf&#39;</span><span class="p">)</span>                   <span class="c1"># Save modified IDF</span>
+</pre></div>
+</div>
+<p><strong>Manually create some object and add it to IDF:</strong></p>
+<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">ed</span><span class="o">.</span><span class="n">create_object</span><span class="p">(</span><span class="s1">&#39;ExternalInterface:FunctionalMockupUnitExport:From:Variable&#39;</span><span class="p">,</span> <span class="n">OutputVariable_Index_Key_Name</span><span class="o">=</span><span class="s1">&#39;Zone 1&#39;</span><span class="p">,</span> <span class="n">OutputVariable_Name</span><span class="o">=</span><span class="s1">&#39;Zone Air Temperature&#39;</span><span class="p">,</span> <span class="n">FMU_Variable_Name</span><span class="o">=</span><span class="s1">&#39;Zone 1 Temperature&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">There is no need to create <code class="docutils literal"><span class="pre">ExternalInterface:FunctionalMockupUnitExport:From:Variable</span></code> manually, because there exists a specialized method for this (See <a class="reference internal" href="modules/specialized/extinterface.html#extinterface"><span class="std std-ref">ExtInterface</span></a>).
+However this example shows how to create objects which contain special characters in field names. <strong>EPQuery</strong> can deal with inaccurate field names and tries
+to match your description to the object template from the IDD file. Therefore, the best strategy is to simply omit any special characters in the field names.
+In addition, it is advised to replace all spaces with underscores.</p>
+</div>
+<p><strong>Print info about object:</strong></p>
+<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">info</span> <span class="o">=</span> <span class="n">ed</span><span class="o">.</span><span class="n">get_object_info</span><span class="p">(</span><span class="s1">&#39;ZoneHVAC:AirDistributionUnit&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+<span class="go">ZoneHVAC:AirDistributionUnit</span>
+<span class="go">    \memo Central air system air distribution unit</span>
+<span class="go">    \serves as a wrapper for a specific type of</span>
+<span class="go">    \memo air terminal unit. This object is referenced in a ZoneHVAC:EquipmentList.</span>
+<span class="go">    \min-fields 4</span>
+<span class="go">A1    \field Name</span>
+<span class="go">    \required-field</span>
+<span class="go">    \reference ZoneEquipmentNames</span>
+<span class="go">A2    \field Air Distribution Unit Outlet Node Name</span>
+<span class="go">    \required-field</span>
+<span class="go">    \type node</span>
+<span class="go">A3    \field Air Terminal Object Type</span>
+<span class="go">    \type choice</span>
+<span class="go">    \key AirTerminal:DualDuct:ConstantVolume</span>
+<span class="go">    \key AirTerminal:DualDuct:VAV</span>
+<span class="go">    \key AirTerminal:SingleDuct:ConstantVolume:Reheat</span>
+<span class="go">    \key AirTerminal:SingleDuct:ConstantVolume:FourPipeBeam</span>
+<span class="go">    \key AirTerminal:SingleDuct:VAV:Reheat</span>
+<span class="go">    \key AirTerminal:SingleDuct:VAV:NoReheat</span>
+<span class="go">    \key AirTerminal:SingleDuct:SeriesPIU:Reheat</span>
+<span class="go">    \key AirTerminal:SingleDuct:ParallelPIU:Reheat</span>
+<span class="go">    \key AirTerminal:SingleDuct:ConstantVolume:FourPipeInduction</span>
+<span class="go">    \key AirTerminal:SingleDuct:VAV:Reheat:VariableSpeedFan</span>
+<span class="go">    \key AirTerminal:SingleDuct:VAV:HeatAndCool:Reheat</span>
+<span class="go">    \key AirTerminal:SingleDuct:VAV:HeatAndCool:NoReheat</span>
+<span class="go">    \key AirTerminal:SingleDuct:ConstantVolume:CooledBeam</span>
+<span class="go">    \key AirTerminal:DualDuct:VAV:OutdoorAir</span>
+<span class="go">    \key AirTerminal:SingleDuct:UserDefined</span>
+<span class="go">    \key AirTerminal:SingleDuct:Mixer</span>
+<span class="go">    \required-field</span>
+<span class="go">A4    \field Air Terminal Name</span>
+<span class="go">    \required-field</span>
+<span class="go">    \type object-list</span>
+<span class="go">    \object-list AirTerminalUnitNames</span>
+<span class="go">N1    \field Nominal Upstream Leakage Fraction</span>
+<span class="go">    \note fraction at system design Flow; leakage Flow constant</span>
+<span class="go">    \leakage fraction</span>
+<span class="go">    \note varies with variable system Flow Rate.</span>
+<span class="go">    \type real</span>
+<span class="go">    \minimum 0</span>
+<span class="go">    \maximum 0.3</span>
+<span class="go">    \default 0</span>
+<span class="go">N2    \field Constant Downstream Leakage Fraction</span>
+<span class="go">    \type real</span>
+<span class="go">    \minimum 0</span>
+<span class="go">    \maximum 0.3</span>
+<span class="go">    \default 0</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API documentation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how-to-contribute.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributors.html">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="modules/idd.html"
+                        title="previous chapter">IDD</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="how-to-contribute.html"
+                        title="next chapter">How to contribute</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/examples.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="how-to-contribute.html" title="How to contribute"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="modules/idd.html" title="IDD"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">EPQuery 0.0.1dev documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Center for Energy Informatics, University of Southern Denmark.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
+    </div>
+  </body>
+</html>
