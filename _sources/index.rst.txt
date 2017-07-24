@@ -33,8 +33,6 @@ EPQuery is licensed under the permissive BSD 2-clause license. Read the :ref:`Li
    contributors
    license
 
-.. BUG: For some reason 'Editor API' shows with 'no title' in the side bar
-
 Indices and tables
 ==================
 
