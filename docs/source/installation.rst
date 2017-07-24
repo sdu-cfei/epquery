@@ -17,3 +17,7 @@ On Ubuntu 16.04 and later, if you run into a permission error, you might want to
 If you plan to modify the source code, it is advised to install in the editable mode::
 
     pip install --user -e .
+
+To uninstall::
+
+    pip uninstall epquery
