@@ -190,9 +190,11 @@ to have no value. Spaces in the field names have to be replaced with
 underscores. Field names with special characters have to be provided
 without them, trying to match the name as close as possible, e.g.
 instead of ‘Output:Variable Index Key Name’
-write ‘OutputVariable_Index_Key_Name’ (no semicolon, spaces to underscores).</p>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
+write ‘OutputVariable_Index_Key_Name’ (no semicolon, spaces to underscores).
+<strong>EPQuery</strong> tries to match the provided name with correct field name
+specified in the IDD file.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
 <p class="last">The method may not work with expandable objects
 with unnamed fields.</p>
 </div>
@@ -249,11 +251,11 @@ Lights, People, ElectricEquipment, ZoneInfiltration:DesignFlowRate</p>
 <dl class="method">
 <dt id="epquery.Editor.filter">
 <code class="descname">filter</code><span class="sig-paren">(</span><em>mask</em>, <em>ignore_index=True</em><span class="sig-paren">)</span><a class="headerlink" href="#epquery.Editor.filter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns objects for which mask elements are True.
+<dd><p>Returns objects for which mask elements are <em>True</em>.
 Does not change the self-stored IDF.</p>
 <p>Index can be ignored. By doing so the resulting list
-includes only matching objects (those where mask is True).
-Otherwise None is put where mask is False. It can be useful
+includes only matching objects (those where mask is <em>True</em>).
+Otherwise <em>None</em> values are used to fill the list. It can be useful
 if the original object positions are to be preserved.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -423,13 +425,7 @@ or relative coordinates (relative to the first vertex).</p>
 <dt id="epquery.Editor.mask">
 <code class="descname">mask</code><span class="sig-paren">(</span><em>keyword</em>, <em>method=’exact’</em>, <em>inverse=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#epquery.Editor.mask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Same as <em>query()</em>, but returns a mask (list of bools).
-The mask represents a list of object matches. It can
-be then applied on IDF objects using <em>apply_mask()</em>.</p>
-<p>This method is useful if you need to:</p>
-<ul class="simple">
-<li>select some objects and get their indexes</li>
-<li>select some objects and print IDF without them (<a href="#id2"><span class="problematic" id="id3">*</span></a>inverse*=False)</li>
-</ul>
+The mask represents the list of selected objects.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -484,8 +480,8 @@ is used to expand the interface to all needed objects.</p>
 <dt id="epquery.Editor.query">
 <code class="descname">query</code><span class="sig-paren">(</span><em>keyword</em>, <em>method=’exact’</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#epquery.Editor.query" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns objects based on given criteria.
-Supports exact matches (<a href="#id4"><span class="problematic" id="id5">*</span></a>method*=’exact’), substring matches
-(<a href="#id6"><span class="problematic" id="id7">*</span></a>method*=’substring’), word matches (<a href="#id8"><span class="problematic" id="id9">*</span></a>method*=’words’).</p>
+Supports exact matches (<a href="#id2"><span class="problematic" id="id3">*</span></a>method*=’exact’), substring matches
+(<a href="#id4"><span class="problematic" id="id5">*</span></a>method*=’substring’), word matches (<a href="#id6"><span class="problematic" id="id7">*</span></a>method*=’words’).</p>
 <p>All methods convert the letters to uppercase before 
 comparing strings, so ‘woRd’==’WorD’ is True.</p>
 <p><em>kwargs</em> represents field descriptors from IDD (<code class="docutils literal"><span class="pre">\field</span></code>).
