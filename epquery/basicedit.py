@@ -22,9 +22,8 @@ from epquery import utilities
 class BasicEdit(object):
     """
     BasicEdit is used to query and manipulate EnergyPlus model stored
-    in IDF file. It contains only basic manipulation methods in its
-    API (object type-agnostic). Look into the *Editor* class for more
-    specialized methods.
+    in the IDF file. It contains only generic manipulation methods (object type-agnostic)
+    and serves as the base for the specialized classes.
     """
 
     def __init__(self, idf_path, idd_path):
@@ -49,8 +48,10 @@ class BasicEdit(object):
         without them, trying to match the name as close as possible, e.g.
         instead of 'Output:Variable Index Key Name'
         write 'OutputVariable_Index_Key_Name' (no semicolon, spaces to underscores).
+        **EPQuery** tries to match the provided name with correct field name
+        specified in the IDD file.
 
-        .. warning::
+        .. note::
 
             The method may not work with expandable objects
             with unnamed fields.
@@ -224,13 +225,7 @@ class BasicEdit(object):
     def mask(self, keyword, method='exact', inverse=False, **kwargs):
         """
         Same as *query()*, but returns a mask (list of bools).
-        The mask represents a list of object matches. It can
-        be then applied on IDF objects using *apply_mask()*.
-
-        This method is useful if you need to: 
-        
-        - select some objects and get their indexes
-        - select some objects and print IDF without them (*inverse*=False)
+        The mask represents the list of selected objects.
 
         :param str keyword: Unique keyword defining object type, e.g. 'Zone'
         :param str method: Search method ('exact', 'substring' or 'words')
@@ -282,12 +277,12 @@ class BasicEdit(object):
 
     def filter(self, mask, ignore_index=True):
         """
-        Returns objects for which mask elements are True.
+        Returns objects for which mask elements are *True*.
         Does not change the self-stored IDF.
 
         Index can be ignored. By doing so the resulting list
-        includes only matching objects (those where mask is True).
-        Otherwise None is put where mask is False. It can be useful
+        includes only matching objects (those where mask is *True*).
+        Otherwise *None* values are used to fill the list. It can be useful
         if the original object positions are to be preserved.
 
         :param mask: Mask
