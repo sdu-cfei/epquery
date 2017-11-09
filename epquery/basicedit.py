@@ -699,6 +699,6 @@ class BasicEdit(object):
         self.to_idf(idf)
 
         # Save FMU
-        fmu = utilities.create_fmu(script, self.idd.path, epw, idf)
+        fmu = utilities.create_fmu(script, self.idd.path, epw, idf, out_dir=directory)
 
         return fmu

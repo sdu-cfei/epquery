@@ -12,7 +12,7 @@ import tempfile
 import numpy as np
 
 
-def create_fmu(script, idd, epw, idf):
+def create_fmu(script, idd, epw, idf, out_dir):
     """
     Uses EnergyPlusToFMU tool to export model to FMU.
     The FMU is saved in the current working directory with
@@ -22,6 +22,7 @@ def create_fmu(script, idd, epw, idf):
     :param str idd: Path to Energy+.idd
     :param str epw: Path to *.epw weather file
     :param str idf: Path to idf file
+    :param str out_dir: Output directory path. CWD if None.
     :returns: Path to FMU
     :rtype: str
     """
@@ -31,6 +32,8 @@ def create_fmu(script, idd, epw, idf):
     # Save CWD and switch to temp dir
     cwd = os.getcwd()
     os.chdir(tempdir)
+    if out_dir is None:
+        out_dir = cwd
 
     # Get IDF file name
     idf_file = idf.replace('.idf', '')
@@ -41,7 +44,7 @@ def create_fmu(script, idd, epw, idf):
 
     # Move FMU to CWD
     temp_fmu_file = os.path.join(tempdir, idf_file + '.fmu')
-    out_fmu_path = os.path.join(cwd, temp_fmu_file.split(os.sep)[-1])
+    out_fmu_path = os.path.join(out_dir, temp_fmu_file.split(os.sep)[-1])
     if os.path.exists(out_fmu_path):
         print('Path already exists: {}'.format(out_fmu_path))
         print('Replacing with new FMU...')
