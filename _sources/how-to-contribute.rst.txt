@@ -6,7 +6,7 @@ How to contribute
 
 1. Open a new issue describing the desired feature or the bug. If you are willing to add/fix yourself, go to point 2.
 
-2. Add new branch or fork the project and make the required changes.
+2. Fork the project and make the required changes.
 
 3. If adding a new feature, implement a unit test(s) for your changes. Otherwise, update the unit test(s) associated with your changes accordingly.
 

@@ -68,7 +68,7 @@ Examples
 
 .. code::
 
-    >> ed.create_object('ExternalInterface:FunctionalMockupUnitExport:From:Variable', OutputVariable_Index_Key_Name='Zone 1', OutputVariable_Name='Zone Air Temperature', FMU_Variable_Name='Zone_1_Temperature')
+    >> ed.create_object('ExternalInterface:FunctionalMockupUnitExport:From:Variable', OutputVariable_Index_Key_Name='Zone 1', OutputVariable_Name='Zone Air Temperature', FMU_Variable_Name='Zone 1 Temperature')
 
 .. note::
 
