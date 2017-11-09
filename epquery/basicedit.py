@@ -28,6 +28,12 @@ class BasicEdit(object):
     """
 
     def __init__(self, idf_path, idd_path):
+
+        # Change paths to absolute (relative paths doesn't work with EnergyPlusToFMU)
+        idf_path = os.path.abspath(idf_path)
+        idd_path = os.path.abspath(idd_path)
+
+        # Instantiate IDF and IDD
         self.idf = idf.IDF(idf_path)
         self.idd = idd.IDD(idd_path)
 
@@ -692,7 +698,12 @@ class BasicEdit(object):
         if directory is None:
             directory = os.getcwd()
 
-        logger.info('Saving to FMU in {}'.format(directory))        
+        # Change paths to absolute
+        directory = os.path.abspath(directory)
+        script = os.path.abspath(script)
+        epw = os.path.abspath(epw)
+
+        logger.info('Saving to FMU in {}'.format(directory))
 
         # Save IDF
         idf = os.path.join(directory, '{}.idf'.format(name))
