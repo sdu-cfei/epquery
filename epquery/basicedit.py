@@ -104,7 +104,7 @@ class BasicEdit(object):
                     logger.debug("Found reasonable match between '{}' and '{}'".format(f, best))
                     values[f] = kwargs[best]
                 else:
-                    # Empty value if no good match
+                    # Empty value if not a good match
                     logger.debug("Did not find reasonable match, assigning empty string")
                     values[f] = ''
 
@@ -120,6 +120,57 @@ class BasicEdit(object):
 
         return obj
 
+    def match_fields(self, obj_type, fields):
+        """
+        Tries to match field names in `fields` with actual field names in IDD.
+        In some cases the user cannot use exact field names as arguments to methods,
+        because of special characters. This method returns a dictionary
+        mapping user field names to IDD field names (user names: IDD names).
+        If a field name couldn't be matched, it's mapped to None.
+
+        .. note::
+
+            All strings are converted to upper case, both in user field names
+            and IDD field names.
+
+        :param str obj_type: Object type, e.g. 'Zone'
+        :param list(str) fields: List of field names
+        :return: dict(str: str)
+        """
+        fields = [f.upper() for f in fields]
+        # fields = [f.replace('_', ' ') for f in fields]
+        idd_fields = self.idd.get_field_names(obj_type)
+        idd_fields = [f.upper() for f in idd_fields]
+        matched = dict()
+
+        logger.info('Matching fields with IDD...')
+        for f in fields:
+            logger.info('Processing field: {}'.format(f))
+            if f in idd_fields:
+                logger.info("Field '{}' found in IDD".format(f))
+                matched[f] = f
+            else:
+                # Find closest match
+                logger.info("Field '{}' not found in IDD, looking for the closest match...".format(f))
+                best = None
+                score = 0
+                for k in idd_fields:
+                    ratio = fuzz.ratio(f, k)
+                    logger.debug("Comparing with '{}', score={}".format(k, ratio))
+                    if ratio > score:
+                        best = k
+                        score = ratio
+                # Assign only if found reasonably good match
+                if (best is not None) and (score > 50):
+                    logger.info("Found a reasonable match between '{}' and '{}'".format(f, best))
+                    matched[f] = best
+                else:
+                    # Empty value if not a good match
+                    logger.error("Did not find any reasonable match, assigning None")
+                    matched[f] = None
+
+        return matched
+
     def query(self, keyword, method='exact', **kwargs):
         """
         Returns objects based on given criteria.
@@ -132,9 +183,12 @@ class BasicEdit(object):
         *kwargs* represents field descriptors from IDD (``\\field``).
         If a descriptor contains space, replace it with underscore.
 
-        .. warning::
+        .. note::
 
-            Currently field names with special characters (e.g. {}/\\) are not supported.
+            Field names with special characters have to be provided
+            without them, trying to match the name as close as possible, e.g.
+            instead of 'Output:Variable Index Key Name'
+            write 'OutputVariable_Index_Key_Name' (no semicolon, spaces to underscores).
 
         :param str keyword: Unique keyword defining object type, e.g. 'Zone'
         :param str method: Search method ('exact', 'substring' or 'words')
@@ -147,14 +201,21 @@ class BasicEdit(object):
 
             >>> ep = BasicEdit('path_to_IDF', 'path_to_IDD')
             >>> objects = ep.query('Zone', method='words', Name='Zone1', Floor_Area=33.5)
-        
         """
         fields = self.idd.get_field_names(keyword)
+        field_map = self.match_fields(keyword, kwargs.keys())
+
+        # Replace kwargs keys with matched IDD keys
+        # (new keys are in upper case)
+        for old_key in kwargs.copy().keys():
+            old_key_up = old_key.upper()
+            assert field_map[old_key_up] is not None, 'Field {} could not be matched in IDD'.format(old_key)
+            kwargs[field_map[old_key_up]] = kwargs.pop(old_key)
 
         def get_field_index(key, fields):
             index = 1  # First field after object type name
             for f in fields:
-                if f == key:
+                if f.upper() == key.upper():
                     return index
                 else:
                     index += 1
@@ -174,10 +235,6 @@ class BasicEdit(object):
             else:
                 logger.error('Unknown compare method: %s', method)
                 None
-
-        # Replace underscores in kwargs
-        for key in kwargs.copy().keys():
-            kwargs[key.replace('_', ' ')] = kwargs.pop(key)
 
         # Create pattern object
         # Existing objects will be compared to this one
@@ -218,8 +275,6 @@ class BasicEdit(object):
             summary += '{:<20} {}\n'.format(key.replace('_', ' ') + ':', kwargs[key])
         summary += '--------------\n'
         summary += 'Method: {}'.format(method)
-        if method == 'fuzzy':
-            summary += ' (score={})'.format(score)
         summary += '\n'
         summary += 'Matches: {}\n'.format(len(matched))
 
