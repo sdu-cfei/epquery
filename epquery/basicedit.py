@@ -687,7 +687,7 @@ class BasicEdit(object):
 
         :param str script: Path to EnergyPlusToFMU.py
         :param str epw: Path to EPW weather file
-        :param str name: IDF/FMU file name (without extension), optional
+        :param str name: IDF/FMU file name (without extension, avoid dashes), optional
         :param str directory: Output directory if other than CWD, optional
         :returns: Path to the generated FMU
         :rtype: str
