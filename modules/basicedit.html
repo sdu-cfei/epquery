@@ -323,6 +323,36 @@ be then applied on IDF objects using <em>apply_mask()</em>.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="epquery.BasicEdit.match_fields">
+<code class="descname">match_fields</code><span class="sig-paren">(</span><em>obj_type</em>, <em>fields</em><span class="sig-paren">)</span><a class="headerlink" href="#epquery.BasicEdit.match_fields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tries to match field names in <cite>fields</cite> with actual field names in IDD.
+In some cases the user cannot use exact field names as arguments to methods,
+because of special characters. This method returns a dictionary
+mapping user field names to IDD field names (user names: IDD names).
+If a field name couldn’t be matched, it’s mapped to None.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">All strings are converted to upper case, both in user field names
+and IDD field names.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obj_type</strong> (<em>str</em>) – Object type, e.g. ‘Zone’</li>
+<li><strong>fields</strong> (<em>list</em><em>(</em><em>str</em><em>)</em>) – List of field names</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">dict(str: str)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="epquery.BasicEdit.query">
 <code class="descname">query</code><span class="sig-paren">(</span><em>keyword</em>, <em>method=’exact’</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#epquery.BasicEdit.query" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns objects based on given criteria.
@@ -332,9 +362,12 @@ Supports exact matches (<a href="#id4"><span class="problematic" id="id5">*</spa
 comparing strings, so ‘woRd’==’WorD’ is True.</p>
 <p><em>kwargs</em> represents field descriptors from IDD (<code class="docutils literal"><span class="pre">\field</span></code>).
 If a descriptor contains space, replace it with underscore.</p>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">Currently field names with special characters (e.g. {}/) are not supported.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Field names with special characters have to be provided
+without them, trying to match the name as close as possible, e.g.
+instead of ‘Output:Variable Index Key Name’
+write ‘OutputVariable_Index_Key_Name’ (no semicolon, spaces to underscores).</p>
 </div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -425,7 +458,7 @@ in the current working directory with the following names:
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>script</strong> (<em>str</em>) – Path to EnergyPlusToFMU.py</li>
 <li><strong>epw</strong> (<em>str</em>) – Path to EPW weather file</li>
-<li><strong>name</strong> (<em>str</em>) – IDF/FMU file name (without extension), optional</li>
+<li><strong>name</strong> (<em>str</em>) – IDF/FMU file name (without extension, avoid dashes), optional</li>
 <li><strong>directory</strong> (<em>str</em>) – Output directory if other than CWD, optional</li>
 </ul>
 </td>
