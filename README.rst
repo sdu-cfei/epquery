@@ -15,14 +15,19 @@ The project is in the pre-release stage.
 Installation
 ============
 
-Curently the only way to install the tool is by cloning this repository and installing using pip
-from the project directory:
+Clone this repository and install using pip:
 
 ::
 
     git clone https://github.com/sdu-cfei/epquery.git epquery
     cd epquery
     pip install . 
+
+Alternatively:
+
+::
+    python -m pip install https://github.com/sdu-cfei/epquery/archive/master.zip
+
 
 Documentation
 =============
