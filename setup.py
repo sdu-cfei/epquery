@@ -10,7 +10,9 @@ setup(name='epquery',
       license='BSD',
       platforms=['Windows', 'Linux'],
       packages=[
-          'epquery'],
+          'epquery',
+          'epquery.edit'
+      ],
       include_package_data=True,
       install_requires=[
           'numpy',
