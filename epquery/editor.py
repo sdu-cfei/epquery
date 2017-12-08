@@ -1,6 +1,3 @@
-from epquery import log_init
-import logging
-logger = logging.getLogger(__name__)
 import numpy as np
 from epquery.edit import Geometry
 from epquery.edit import ExtInterface

@@ -7,7 +7,6 @@ See LICENSE file in the project root for license terms.
 """
 
 import logging
-logger = logging.getLogger(__name__)
 import re
 from collections import OrderedDict
 
@@ -30,7 +29,8 @@ class IDF(object):
 
         :param str idf_path: Path to IDF file
         """
-        logger.info('IDF instance created')
+        self.logger = logging.getLogger(__name__)
+        self.logger.info('IDF instance created')
 
         if idf_path is not None:
             self.idf = self._parse_idf(idf_path)
@@ -38,7 +38,7 @@ class IDF(object):
             self.idf = idf_obj
         else:
             msg = 'Cannot instantiate IDF, neither path nor object passed'
-            logger.error(msg)
+            self.logger.error(msg)
             raise ValueError(msg)
 
     def get_object(self, index):
@@ -100,31 +100,31 @@ class IDF(object):
         idf = list()
 
         # Read IDF file
-        logger.debug('Trying to open file %s', idf_path)
+        self.logger.debug('Trying to open file %s', idf_path)
         with open(idf_path) as f:
             original_lines = f.readlines()
         
         # Delete comments
-        logger.debug('Deleting comments from IDF file')
+        self.logger.debug('Deleting comments from IDF file')
         lines = list()
         for l in original_lines:
             lines.append(l.split('!')[0].strip())
         del original_lines
 
         # Reconstruct continuous string
-        logger.debug('Reconstructing continuous string from lines')
+        self.logger.debug('Reconstructing continuous string from lines')
         idfstr = ""
         for l in lines:
             idfstr += l + '\n'
         del lines
 
         # Get list of object strings
-        logger.debug('Splitting string into object strings')
+        self.logger.debug('Splitting string into object strings')
         objects = re.split(r';', idfstr)
         objects = [x.strip() for x in objects]
 
         # Delete any empty objects left after splitting
-        logger.debug('%d empty string(s) found after splitting. Deleting...', objects.count(''))
+        self.logger.debug('%d empty string(s) found after splitting. Deleting...', objects.count(''))
         objects = [x for x in objects if x != '']
 
         # Add objects to idf
@@ -141,5 +141,5 @@ class IDF(object):
             assert obj[0] != '', msg
             assert obj[0] is not None, msg
 
-        logger.debug('Number of found objects: %d', len(idf))
+        self.logger.debug('Number of found objects: %d', len(idf))
         return idf

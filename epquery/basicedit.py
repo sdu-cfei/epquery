@@ -7,7 +7,6 @@ See LICENSE file in the project root for license terms.
 """
 
 import logging
-logger = logging.getLogger(__name__)
 import copy
 import tempfile
 import shutil
@@ -28,6 +27,8 @@ class BasicEdit(object):
     """
 
     def __init__(self, idf_path, idd_path):
+
+        self.logger = logging.getLogger(__name__)
 
         # Change paths to absolute (relative paths doesn't work with EnergyPlusToFMU)
         idf_path = os.path.abspath(idf_path)
@@ -67,7 +68,7 @@ class BasicEdit(object):
         :return: New object
         :rtype: list(str)
         """
-        logger.info('Creating new object: {}'.format(obj_type))
+        self.logger.info('Creating new object: {}'.format(obj_type))
 
         field_names = self.idd.get_field_names(obj_type)
         field_names = [f.upper() for f in field_names]
@@ -81,31 +82,31 @@ class BasicEdit(object):
         # Field names in kwargs may be slightly different than in IDD,
         # because special characters cannot be used in argument names,
         # therefore a mapping is needed
-        logger.debug('Mapping fields from kwargs with IDD...')
+        self.logger.debug('Mapping fields from kwargs with IDD...')
         values = dict()
         for f in field_names:
-            logger.debug('Processing field: {}'.format(f))
+            self.logger.debug('Processing field: {}'.format(f))
             if f in kwargs:
-                logger.debug("Field '{}' found in kwargs".format(f))
+                self.logger.debug("Field '{}' found in kwargs".format(f))
                 values[f] = kwargs[f]
             else:
                 # Find closest match
-                logger.debug("Field '{}' not found in kwargs, looking for closest match...".format(f))
+                self.logger.debug("Field '{}' not found in kwargs, looking for closest match...".format(f))
                 best = None
                 score = 0
                 for k in kwargs:
                     ratio = fuzz.ratio(f, k)
-                    logger.debug("Comparing with '{}', score={}".format(k, ratio))
+                    self.logger.debug("Comparing with '{}', score={}".format(k, ratio))
                     if ratio > score:
                         best = k
                         score = ratio
                 # Assign only if found reasonably good match
                 if (best is not None) and (score > 50):
-                    logger.debug("Found reasonable match between '{}' and '{}'".format(f, best))
+                    self.logger.debug("Found reasonable match between '{}' and '{}'".format(f, best))
                     values[f] = kwargs[best]
                 else:
                     # Empty value if not a good match
-                    logger.debug("Did not find reasonable match, assigning empty string")
+                    self.logger.debug("Did not find reasonable match, assigning empty string")
                     values[f] = ''
 
         # Make object
@@ -143,30 +144,30 @@ class BasicEdit(object):
         idd_fields = [f.upper() for f in idd_fields]
         matched = dict()
 
-        logger.info('Matching fields with IDD...')
+        self.logger.info('Matching fields with IDD...')
         for f in fields:
-            logger.info('Processing field: {}'.format(f))
+            self.logger.info('Processing field: {}'.format(f))
             if f in idd_fields:
-                logger.info("Field '{}' found in IDD".format(f))
+                self.logger.info("Field '{}' found in IDD".format(f))
                 matched[f] = f
             else:
                 # Find closest match
-                logger.info("Field '{}' not found in IDD, looking for the closest match...".format(f))
+                self.logger.info("Field '{}' not found in IDD, looking for the closest match...".format(f))
                 best = None
                 score = 0
                 for k in idd_fields:
                     ratio = fuzz.ratio(f, k)
-                    logger.debug("Comparing with '{}', score={}".format(k, ratio))
+                    self.logger.debug("Comparing with '{}', score={}".format(k, ratio))
                     if ratio > score:
                         best = k
                         score = ratio
                 # Assign only if found reasonably good match
                 if (best is not None) and (score > 50):
-                    logger.info("Found a reasonable match between '{}' and '{}'".format(f, best))
+                    self.logger.info("Found a reasonable match between '{}' and '{}'".format(f, best))
                     matched[f] = best
                 else:
                     # Empty value if not a good match
-                    logger.error("Did not find any reasonable match, assigning None")
+                    self.logger.error("Did not find any reasonable match, assigning None")
                     matched[f] = None
 
         return matched
@@ -233,7 +234,7 @@ class BasicEdit(object):
                         match = False
                 return match
             else:
-                logger.error('Unknown compare method: %s', method)
+                self.logger.error('Unknown compare method: %s', method)
                 None
 
         # Create pattern object
@@ -299,14 +300,14 @@ class BasicEdit(object):
         :param kwargs: Field types and required values
         :rtype: list(bool)
         """
-        logger.debug('Applying mask with parameters: keyword=%s, method=%s, inverse=%s and **kwargs',
+        self.logger.debug('Applying mask with parameters: keyword=%s, method=%s, inverse=%s and **kwargs',
                      keyword, method, inverse)
 
         matched = self.query(keyword, method, **kwargs)
         objects = self.idf.get_objects()
 
-        logger.debug('Number of found matches: %d', len(matched))
-        logger.debug('Total number of objects in IDF: %d', len(objects))
+        self.logger.debug('Number of found matches: %d', len(matched))
+        self.logger.debug('Total number of objects in IDF: %d', len(objects))
 
         def true(inverse):
             if inverse:
@@ -321,23 +322,23 @@ class BasicEdit(object):
             else:
                 mask.append(not true(inverse))
 
-        logger.debug('Number of objects in mask: %d', len(mask))
+        self.logger.debug('Number of objects in mask: %d', len(mask))
 
         # Decide if proceed if mask is empty
         if mask.count(True) == 0:
             msg = 'No objects selected in mask, is the query correct? keyword: {}, kwargs: {}'\
                   .format(keyword, kwargs)
-            logger.warning(msg)
+            self.logger.warning(msg)
             print(msg)
             while True:
-                logger.info('Waiting for user input...')
+                self.logger.info('Waiting for user input...')
                 answer = raw_input('Do you want to proceed? (y/n): ')
                 if answer.upper() == 'Y':
                     break
                 elif answer.upper() == 'N':
-                    logger.info('User decided to exit')
+                    self.logger.info('User decided to exit')
                     raise RuntimeError('User triggered exception')
-            logger.info('User decided to proceed')
+            self.logger.info('User decided to proceed')
 
         return mask
 
@@ -396,7 +397,7 @@ class BasicEdit(object):
         assert len(mask) == len(objects), 'Lengths of mask ({}) and objects ({}) do not match'\
                                           .format(len(mask), len(objects))
         if mask.count(True) == 0:
-            logger.warning('[apply] Mask is empty!')
+            self.logger.warning('[apply] Mask is empty!')
 
         # Get indices of unmasked objects
         for i in range(len(mask)):
@@ -502,7 +503,7 @@ class BasicEdit(object):
         index = [x for x, y in enumerate(mask) if y is True]
         
         if len(index) == 0:
-            logger.warning('No object matched the query. get_index() returns None.')
+            self.logger.warning('No object matched the query. get_index() returns None.')
             return None
         elif len(index) == 1 and flatten is True:
             return index[0]
@@ -554,7 +555,7 @@ class BasicEdit(object):
 
             if keys_ok is False:
                 msg = '[set_field] Selected objects do not contain all keys from kwargs'
-                logger.error(msg)
+                self.logger.error(msg)
                 raise KeyError(msg)
 
             # Copy and modify
@@ -639,7 +640,7 @@ class BasicEdit(object):
                 return obj[index]
             else:
                 index += 1
-        logger.warning('Field not found in {}: {}'.format(object_name, field))
+        self.logger.warning('Field not found in {}: {}'.format(object_name, field))
         return None
 
     def _get_field_from_all(self, objects, field):
@@ -668,7 +669,7 @@ class BasicEdit(object):
         :param str path: Path to the output file
         :rtype: None
         """
-        logger.debug('Attempting to save IDF to file: %s', path)
+        self.logger.debug('Attempting to save IDF to file: %s', path)
 
         idf_obj = self.idf.get_objects()
 
@@ -679,7 +680,7 @@ class BasicEdit(object):
         idf_str = ""
         min_width = 45
         for obj in idf:
-            logger.debug('    Printing object: %s (%s)', obj[0], obj[1])
+            self.logger.debug('    Printing object: %s (%s)', obj[0], obj[1])
 
             # Check if object is commented out
             if obj[0].strip()[0] == '!':
@@ -758,7 +759,7 @@ class BasicEdit(object):
         script = os.path.abspath(script)
         epw = os.path.abspath(epw)
 
-        logger.info('Saving to FMU in {}'.format(directory))
+        self.logger.info('Saving to FMU in {}'.format(directory))
 
         # Save IDF
         idf = os.path.join(directory, '{}.idf'.format(name))
