@@ -8,6 +8,7 @@ See LICENSE file in the project root for license terms.
 
 import logging
 import re
+import sys
 from collections import OrderedDict
 
 
@@ -15,6 +16,7 @@ class IDF(object):
     """
     This class is used to parse and handle IDF files.
     """
+    ENCODING = 'cp437'
 
     def __init__(self, idf_path=None, idf_obj=None):
         """
@@ -101,9 +103,13 @@ class IDF(object):
 
         # Read IDF file
         self.logger.debug('Trying to open file %s', idf_path)
-        with open(idf_path) as f:
-            original_lines = f.readlines()
-        
+        if sys.version_info[0] >= 3.:
+            with open(idf_path, encoding=IDF.ENCODING) as f:
+                original_lines = f.readlines()
+        else:
+            with open(idf_path) as f:
+                original_lines = f.readlines()
+
         # Delete comments
         self.logger.debug('Deleting comments from IDF file')
         lines = list()

@@ -8,11 +8,13 @@ See LICENSE file in the project root for license terms.
 
 import logging
 import re
+import sys
 from collections import OrderedDict
 
 
 class IDD(object):
     "IDD parser."
+    ENCODING = 'cp437'
 
     def __init__(self, idd_path):
         """
@@ -164,8 +166,13 @@ class IDD(object):
 
         # Read IDD file
         self.logger.debug('Trying to open file %s', idd_path)
-        with open(idd_path) as f:
-            original_lines = f.readlines()
+
+        if sys.version_info[0] >= 3.:
+            with open(idd_path, encoding=IDD.ENCODING) as f:
+                original_lines = f.readlines()
+        else:
+            with open(idd_path) as f:
+                original_lines = f.readlines()
         
         # Delete comments
         self.logger.debug('Deleting comments from IDD file')
@@ -242,5 +249,5 @@ class IDD(object):
 
                 # Add to idd
                 idd[group_name][obj_name] = obj_dict
-    
+
         return idd
