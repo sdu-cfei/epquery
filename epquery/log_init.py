@@ -7,5 +7,6 @@ See LICENSE file in the project root for license terms.
 """
 import logging
 
-logging.basicConfig(filename='epquery.log', filemode='w', level='DEBUG',
-                    format='[%(asctime)s][%(name)s][%(levelname)s] %(message)s')
+# basicConfig should be called by the parent application
+# logging.basicConfig(filename='epquery.log', filemode='w', level='DEBUG',
+#                     format='[%(asctime)s][%(name)s][%(levelname)s] %(message)s')

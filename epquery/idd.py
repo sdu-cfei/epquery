@@ -7,19 +7,21 @@ See LICENSE file in the project root for license terms.
 """
 
 import logging
-logger = logging.getLogger(__name__)
 import re
+import sys
 from collections import OrderedDict
 
 
 class IDD(object):
     "IDD parser."
+    ENCODING = 'cp437'
 
     def __init__(self, idd_path):
         """
         :param str idd_path: Path to IDD file
         """
-        logger.info('IDD instance created')
+        self.logger = logging.getLogger(__name__)
+        self.logger.info('IDD instance created')
         self.idd = self._parse_idd(idd_path)
         self.path = idd_path
 
@@ -99,7 +101,7 @@ class IDD(object):
             fields = [x for x in self._get_object(obj_type).keys() if x != obj_type]
         else:
             msg = 'Object does not exist in Energy+.idd: {}'.format(obj_type)
-            logger.error(msg)
+            self.logger.error(msg)
             raise ValueError(msg)
         return fields
 
@@ -139,7 +141,7 @@ class IDD(object):
                     return self.idd[group][obj_id]
 
         msg = "Invalid object type (does not exist in Energy+.idd): {}".format(obj_type)
-        logger.error(msg)
+        self.logger.error(msg)
         raise ValueError(msg)
         return None
 
@@ -163,28 +165,33 @@ class IDD(object):
         idd = OrderedDict()
 
         # Read IDD file
-        logger.debug('Trying to open file %s', idd_path)
-        with open(idd_path) as f:
-            original_lines = f.readlines()
+        self.logger.debug('Trying to open file %s', idd_path)
+
+        if sys.version_info[0] >= 3.:
+            with open(idd_path, encoding=IDD.ENCODING) as f:
+                original_lines = f.readlines()
+        else:
+            with open(idd_path) as f:
+                original_lines = f.readlines()
         
         # Delete comments
-        logger.debug('Deleting comments from IDD file')
+        self.logger.debug('Deleting comments from IDD file')
         lines = list()
         for l in original_lines:
             lines.append(l.split('!')[0].strip())
         del original_lines
 
         # Reconstruct continuous string
-        logger.debug('Reconstructing continuous string from lines')
+        self.logger.debug('Reconstructing continuous string from lines')
         iddstr = ""
         for l in lines:
             iddstr += l + '\n'
         del lines
 
         # Groups
-        logger.debug('Getting group names from IDD')
+        self.logger.debug('Getting group names from IDD')
         groups_dict = OrderedDict()  # OrderedDict(str: str)
-        groups = re.split(r'\\ *?group', iddstr)
+        groups = re.split(r'\\ *?group', iddstr, flags=re.IGNORECASE)
         groups = [x.strip() for x in groups]
         groups = groups[1:]  # Neglect everything before first group definition
         for g in groups:
@@ -196,21 +203,21 @@ class IDD(object):
         del groups
 
         # Objects and fields
-        logger.debug('Getting object names, field IDs and descriptions from IDD')
+        self.logger.debug('Getting object names, field IDs and descriptions from IDD')
         for group_name in groups_dict.keys():
-            logger.debug('Processing group: %s', group_name)
+            self.logger.debug('Processing group: %s', group_name)
             idd[group_name] = OrderedDict()
             all_objects = groups_dict[group_name]  # str
-            sep_objects = re.split(r'\n\n+', all_objects.strip())  # list(str)
+            sep_objects = re.split(r'\n\n+', all_objects.strip(), flags=re.IGNORECASE)  # list(str)
             for obj in sep_objects:
                 obj_dict = OrderedDict()
                 obj_split = obj.split(',', 1)
                 obj_name = obj_split[0].strip()  # str
-                logger.debug('    Processing object: %s', obj_name)
+                self.logger.debug('    Processing object: %s', obj_name)
                 fields_str = obj_split[1].strip()  # str
 
                 # Split into descriptions and ids
-                desc_and_ids = re.split(r'[\\\n,]', fields_str)                
+                desc_and_ids = re.split(r'[\\\n,]', fields_str, flags=re.IGNORECASE)
 
                 # Remove empty elements
                 desc_and_ids = [x for x in desc_and_ids if x.strip() != '']
@@ -242,5 +249,5 @@ class IDD(object):
 
                 # Add to idd
                 idd[group_name][obj_name] = obj_dict
-    
+
         return idd
