@@ -184,7 +184,7 @@ class IDD(object):
         # Groups
         self.logger.debug('Getting group names from IDD')
         groups_dict = OrderedDict()  # OrderedDict(str: str)
-        groups = re.split(r'\\ *?group', iddstr)
+        groups = re.split(r'\\ *?group', iddstr, flags=re.IGNORECASE)
         groups = [x.strip() for x in groups]
         groups = groups[1:]  # Neglect everything before first group definition
         for g in groups:
@@ -201,7 +201,7 @@ class IDD(object):
             self.logger.debug('Processing group: %s', group_name)
             idd[group_name] = OrderedDict()
             all_objects = groups_dict[group_name]  # str
-            sep_objects = re.split(r'\n\n+', all_objects.strip())  # list(str)
+            sep_objects = re.split(r'\n\n+', all_objects.strip(), flags=re.IGNORECASE)  # list(str)
             for obj in sep_objects:
                 obj_dict = OrderedDict()
                 obj_split = obj.split(',', 1)
@@ -210,7 +210,7 @@ class IDD(object):
                 fields_str = obj_split[1].strip()  # str
 
                 # Split into descriptions and ids
-                desc_and_ids = re.split(r'[\\\n,]', fields_str)                
+                desc_and_ids = re.split(r'[\\\n,]', fields_str, flags=re.IGNORECASE)
 
                 # Remove empty elements
                 desc_and_ids = [x for x in desc_and_ids if x.strip() != '']
