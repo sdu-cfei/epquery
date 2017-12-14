@@ -6,7 +6,6 @@ This code is licensed under BSD 2-clause license.
 See LICENSE file in the project root for license terms.
 """
 
-import log_init
 import logging
 import copy
 import tempfile
@@ -14,6 +13,7 @@ import shutil
 import os
 import collections
 from fuzzywuzzy import fuzz
+from epquery import log_init
 from epquery import idd
 from epquery import idf
 from epquery import utilities
