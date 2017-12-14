@@ -36,7 +36,7 @@ idd = os.path.join(outdir, 'Energy+.idd')
 download.get_idd(8, idd)
 
 # Check E+ version and download corresponding IDD
-ed = epq.Editor(idf, idd)
+ed = epq.Editor(idf, idd, config_logger=True)
 
 # Do some stuff...
 # ================

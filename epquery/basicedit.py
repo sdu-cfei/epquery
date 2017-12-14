@@ -6,6 +6,7 @@ This code is licensed under BSD 2-clause license.
 See LICENSE file in the project root for license terms.
 """
 
+import log_init
 import logging
 import copy
 import tempfile
@@ -24,9 +25,21 @@ class BasicEdit(object):
     in IDF file. It contains only basic manipulation methods in its
     API (object type-agnostic). Look into the *Editor* class for more
     specialized methods.
+
+    Use config_logger=True if you want to use default settings for logging.
+    Otherwise you have to specify your own logging configuration using the
+    logging module.
+
+    :param str idf_path: Path to IDF file
+    :param str idd_path: Path to IDD file
+    :param bool config_logger: Configure logger using logging.basicConfig
     """
 
-    def __init__(self, idf_path, idd_path):
+    def __init__(self, idf_path, idd_path, config_logger=False):
+
+        # Default logging configuration?
+        if config_logger:
+            log_init.config_logger()
 
         self.logger = logging.getLogger(__name__)
 
