@@ -21,11 +21,6 @@ outdir = os.path.join('examples', 'output')
 if not os.path.exists(outdir):
     os.makedirs(outdir)
 
-# Configure logging
-log_path = os.path.join(outdir, 'epquery.log')
-logging.basicConfig(filename=log_path, filemode='w', level='DEBUG',
-                    format='[%(asctime)s][%(name)s][%(levelname)s] %(message)s')
-
 # Download IDF
 idf = os.path.join(outdir, '1ZoneUncontrolled.idf')
 download.get_test_idf(name='1ZoneUncontrolled', ver='8.8.0', 
