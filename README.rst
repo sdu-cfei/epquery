@@ -26,6 +26,7 @@ Clone this repository and install using pip:
 Alternatively:
 
 ::
+
     python -m pip install https://github.com/sdu-cfei/epquery/archive/master.zip
 
 
