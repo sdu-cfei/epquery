@@ -8,3 +8,4 @@ epquery.egg-info/
 docs/build/
 dist/
 examples/output/
+build/
