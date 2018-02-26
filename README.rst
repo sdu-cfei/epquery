@@ -15,7 +15,12 @@ The project is in the pre-release stage.
 Installation
 ============
 
-Clone this repository and install using pip:
+Option 1:
+::
+
+    pip install epquery
+
+Option 2: clone this repository and install using pip:
 
 ::
 
@@ -23,7 +28,7 @@ Clone this repository and install using pip:
     cd epquery
     pip install . 
 
-Alternatively:
+Option 3:
 
 ::
 
