@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='epquery',
-      version='0.0.1',
+      version='0.0.2dev',
       description='EnergyPlus IDF editing tool',
       url='https://github.com/sdu-cfei/epquery',
       keywords='energyplus idf editor',
