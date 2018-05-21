@@ -9,3 +9,4 @@ docs/build/
 dist/
 examples/output/
 build/
+.vscode/
