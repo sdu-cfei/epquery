@@ -60,7 +60,7 @@ class BasicEdit(object):
         """
         return self.idd.get_object_info(obj_type)
 
-    def create_object(self, obj_type, inplace=False, **kwargs):
+    def create_object(self, obj_type, inplace=False, match=75, **kwargs):
         """
         Creates and returns a new object of type *obj_type* with fields
         defined by *kwargs*. Fields not provided in *kwargs* are assumed
@@ -69,6 +69,9 @@ class BasicEdit(object):
         without them, trying to match the name as close as possible, e.g.
         instead of 'Output:Variable Index Key Name'
         write 'OutputVariable_Index_Key_Name' (no semicolon, spaces to underscores).
+        The field names matching can be controlled with *match*. The higher the *match*
+        is, the more accurate the field has to be. If too low, more than
+        one field name may be matched.
 
         .. warning::
 
@@ -78,6 +81,7 @@ class BasicEdit(object):
         :param str obj_type: Object type, e.g. 'Schedule:File'
         :param kwargs: Field names and values
         :param bool inplace: If True, the object is appended to the IDF
+        :param match: int, percent (0-100), threshold for name matching
         :return: New object
         :rtype: list(str)
         """
@@ -114,7 +118,7 @@ class BasicEdit(object):
                         best = k
                         score = ratio
                 # Assign only if found reasonably good match
-                if (best is not None) and (score > 50):
+                if (best is not None) and (score > match):
                     self.logger.debug("Found reasonable match between '{}' and '{}'".format(f, best))
                     values[f] = kwargs[best]
                 else:
