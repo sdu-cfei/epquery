@@ -45,7 +45,7 @@ class TestEditor(unittest.TestCase):
 
     def test_simple_queries(self):
         editor = epq.Editor(self.idf, self.idd)
-        
+
         # mask + get_field
         zone_mask = editor.mask('Zone')
         zone_name = editor.get_field(zone_mask, 'Name')
@@ -65,6 +65,13 @@ class TestEditor(unittest.TestCase):
         mat_mask = editor.mask('Material:NoMass', Thermal_Resistance_m2_K_W='5.456')
         mat_name = editor.get_field(mat_mask, 'Name')
         self.assertEqual(mat_name, 'R31LAYER')
+
+    def test_set_field(self):
+        editor = epq.Editor(self.idf, self.idd)
+        m = editor.mask('RunPeriod')
+        editor.set_field(m, Name='Test')
+        name = editor.get_field(m, 'Name')
+        self.assertEqual(name, 'Test')
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
