@@ -529,16 +529,13 @@ class BasicEdit(object):
 
     def set_field(self, mask, **kwargs):
         """
-        Sets a new value(s) to the field(s) of the selected objects *IN PLACE*.
-        In addition returns the modified objects.
+        Set a new value(s) to the field(s) of the selected objects *IN PLACE*.
+        In addition, return the modified objects. Try to match field names from
+        `kwargs` with those from IDD.
 
         .. warning::
 
             Does not work with expandable objects with unnamed fields.
-
-        .. warning::
-
-            Currently field names with special characters (e.g. {}/\\) are not supported.
 
         :param mask: Selected objects
         :type mask: list(bool)
@@ -561,25 +558,24 @@ class BasicEdit(object):
             # Make sure the object is not empty
             assert len(obj) > 0, 'Empty object found'
 
-            # Make sure the keys are matching
+            # Match fields
             obj_type = obj[0]
             fields = self.idd.get_field_names(obj_type)
+            field_map = self.match_fields(obj_type, kwargs.keys())
 
-            keys_ok = True
-            for key in kwargs.keys():
-                if key not in fields:
-                    keys_ok = False
-
-            if keys_ok is False:
-                msg = '[set_field] Selected objects do not contain all keys from kwargs'
-                self.logger.error(msg)
-                raise KeyError(msg)
+            # Replace kwargs keys with matched IDD keys
+            # (new keys are in upper case)
+            for old_key in kwargs.copy().keys():
+                old_key_up = old_key.upper()
+                assert field_map[old_key_up] is not None, 'Field {} could not be matched in IDD'.format(old_key)
+                kwargs[field_map[old_key_up]] = kwargs.pop(old_key)
 
             # Copy and modify
             new_objects.append(list())
             new_objects[-1].append(obj_type)
 
-            for v, f in zip(obj[1:], fields):
+            for v, k in zip(obj[1:], fields):
+                f = k.upper()
                 if f in kwargs:
                     # New value
                     new_objects[-1].append(kwargs[f])

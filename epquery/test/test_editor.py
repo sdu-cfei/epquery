@@ -69,9 +69,14 @@ class TestEditor(unittest.TestCase):
     def test_set_field(self):
         editor = epq.Editor(self.idf, self.idd)
         m = editor.mask('RunPeriod')
+        # Single-word field name
         editor.set_field(m, Name='Test')
         name = editor.get_field(m, 'Name')
         self.assertEqual(name, 'Test')
+        # Multi-word field name
+        editor.set_field(m, Day_of_Week_for_Start_Day='Test')
+        day = editor.get_field(m, 'Day of Week for Start Day')
+        self.assertEqual(day, 'Test')
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
