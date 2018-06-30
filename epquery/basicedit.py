@@ -12,6 +12,7 @@ import tempfile
 import shutil
 import os
 import collections
+import sys
 from fuzzywuzzy import fuzz
 from epquery import log_init
 from epquery import idd
@@ -360,7 +361,12 @@ class BasicEdit(object):
             print(msg)
             while True:
                 self.logger.info('Waiting for user input...')
-                answer = raw_input('Do you want to proceed? (y/n): ')  # TODO: WON'T WORK WITH PYTHON 3
+                if sys.version_info[0] >= 3:
+                    # Python 3
+                    answer = input('Do you want to proceed? (y/n): ')
+                else:
+                    # Python 2
+                    answer = raw_input('Do you want to proceed? (y/n): ')
                 if answer.upper() == 'Y':
                     break
                 elif answer.upper() == 'N':
