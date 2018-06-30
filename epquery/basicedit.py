@@ -133,6 +133,17 @@ class BasicEdit(object):
         for f in field_names:
             obj.append(values[f])
 
+        # Remove empty trailing fields
+        for i in range(len(obj) - 1, 0, -1):
+            f = field_names[i-1]
+            if obj[i] == '':
+                self.logger.debug(
+                    "create_object(): removing trailing empty "
+                    "field '{}' from '{}'".format(f, obj[0]))
+                obj.pop(i)
+            else:
+                break
+
         if inplace:
             self.add_object(obj)
 
@@ -349,7 +360,7 @@ class BasicEdit(object):
             print(msg)
             while True:
                 self.logger.info('Waiting for user input...')
-                answer = raw_input('Do you want to proceed? (y/n): ')
+                answer = raw_input('Do you want to proceed? (y/n): ')  # TODO: WON'T WORK WITH PYTHON 3
                 if answer.upper() == 'Y':
                     break
                 elif answer.upper() == 'N':
