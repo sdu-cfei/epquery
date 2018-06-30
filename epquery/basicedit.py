@@ -12,6 +12,7 @@ import tempfile
 import shutil
 import os
 import collections
+import sys
 from fuzzywuzzy import fuzz
 from epquery import log_init
 from epquery import idd
@@ -132,6 +133,17 @@ class BasicEdit(object):
 
         for f in field_names:
             obj.append(values[f])
+
+        # Remove empty trailing fields
+        for i in range(len(obj) - 1, 0, -1):
+            f = field_names[i-1]
+            if obj[i] == '':
+                self.logger.debug(
+                    "create_object(): removing trailing empty "
+                    "field '{}' from '{}'".format(f, obj[0]))
+                obj.pop(i)
+            else:
+                break
 
         if inplace:
             self.add_object(obj)
@@ -349,7 +361,12 @@ class BasicEdit(object):
             print(msg)
             while True:
                 self.logger.info('Waiting for user input...')
-                answer = raw_input('Do you want to proceed? (y/n): ')
+                if sys.version_info[0] >= 3:
+                    # Python 3
+                    answer = input('Do you want to proceed? (y/n): ')
+                else:
+                    # Python 2
+                    answer = raw_input('Do you want to proceed? (y/n): ')
                 if answer.upper() == 'Y':
                     break
                 elif answer.upper() == 'N':
