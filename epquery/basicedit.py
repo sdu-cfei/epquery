@@ -296,7 +296,7 @@ class BasicEdit(object):
         summary += '\n'
         summary += 'Matches: {}\n'.format(len(matched))
 
-        print(summary)
+        self.logger.debug(summary)
 
         return matched
 
@@ -346,7 +346,6 @@ class BasicEdit(object):
             msg = 'No objects selected in mask, is the query correct? keyword: {}, kwargs: {}'\
                   .format(keyword, kwargs)
             self.logger.warning(msg)
-            print(msg)
             while True:
                 self.logger.info('Waiting for user input...')
                 answer = raw_input('Do you want to proceed? (y/n): ')
