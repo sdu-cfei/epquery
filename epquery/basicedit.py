@@ -346,15 +346,7 @@ class BasicEdit(object):
             msg = 'No objects selected in mask, is the query correct? keyword: {}, kwargs: {}'\
                   .format(keyword, kwargs)
             self.logger.warning(msg)
-            while True:
-                self.logger.info('Waiting for user input...')
-                answer = raw_input('Do you want to proceed? (y/n): ')
-                if answer.upper() == 'Y':
-                    break
-                elif answer.upper() == 'N':
-                    self.logger.info('User decided to exit')
-                    raise RuntimeError('User triggered exception')
-            self.logger.info('User decided to proceed')
+            self.logger.info('Proceeding anyway')
 
         return mask
 
