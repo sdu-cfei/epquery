@@ -308,7 +308,7 @@ class BasicEdit(object):
         summary += '\n'
         summary += 'Matches: {}\n'.format(len(matched))
 
-        print(summary)
+        self.logger.debug(summary)
 
         return matched
 
@@ -358,21 +358,7 @@ class BasicEdit(object):
             msg = 'No objects selected in mask, is the query correct? keyword: {}, kwargs: {}'\
                   .format(keyword, kwargs)
             self.logger.warning(msg)
-            print(msg)
-            while True:
-                self.logger.info('Waiting for user input...')
-                if sys.version_info[0] >= 3:
-                    # Python 3
-                    answer = input('Do you want to proceed? (y/n): ')
-                else:
-                    # Python 2
-                    answer = raw_input('Do you want to proceed? (y/n): ')
-                if answer.upper() == 'Y':
-                    break
-                elif answer.upper() == 'N':
-                    self.logger.info('User decided to exit')
-                    raise RuntimeError('User triggered exception')
-            self.logger.info('User decided to proceed')
+            self.logger.info('Proceeding anyway')
 
         return mask
 
