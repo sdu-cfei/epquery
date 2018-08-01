@@ -10,6 +10,7 @@ import os
 import shutil
 import tempfile
 import numpy as np
+import logging
 
 
 def create_fmu(script, idd, epw, idf, out_dir):
@@ -46,8 +47,8 @@ def create_fmu(script, idd, epw, idf, out_dir):
     temp_fmu_file = os.path.join(tempdir, idf_file + '.fmu')
     out_fmu_path = os.path.join(out_dir, temp_fmu_file.split(os.sep)[-1])
     if os.path.exists(out_fmu_path):
-        print('Path already exists: {}'.format(out_fmu_path))
-        print('Replacing with new FMU...')
+        logging.info('Path already exists: {}'.format(out_fmu_path))
+        logging.info('Replacing with new FMU...')
         os.remove(out_fmu_path)
     shutil.move(temp_fmu_file, out_fmu_path)
 
