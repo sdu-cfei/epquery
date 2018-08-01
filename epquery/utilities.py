@@ -28,7 +28,9 @@ def create_fmu(script, idd, epw, idf, out_dir):
     :rtype: str
     """
     # Create temporary directory
-    tempdir = tempfile.mkdtemp()
+    tempdir = os.path.join('.', 'temp-dir-fmu') #tempfile.mkdtemp()
+    if not os.path.exists(tempdir):
+        os.makedirs(tempdir)
 
     # Save CWD and switch to temp dir
     cwd = os.getcwd()
@@ -42,6 +44,9 @@ def create_fmu(script, idd, epw, idf, out_dir):
 
     # Call EnergyPlusToFMU and generate FMU
     os.system('python ' + script + ' -i ' + idd + ' -w ' + epw + ' -d ' + idf)
+
+    # Return to CWD
+    os.chdir(cwd)
 
     # Move FMU to CWD
     temp_fmu_file = os.path.join(tempdir, idf_file + '.fmu')
