@@ -16,7 +16,7 @@ setup(name='epquery',
       include_package_data=True,
       install_requires=[
           'numpy',
-          'fuzzywuzzy[speedup]',
+          'fuzzywuzzy',
           'requests'
       ],
       classifiers = [
