@@ -40,12 +40,6 @@ Documentation
 
 The documentation is hosted on GitHub Pages:  `https://sdu-cfei.github.io/epquery <https://sdu-cfei.github.io/epquery>`_
 
-Author
-======
-
-`Krzysztof Arendt <https://github.com/krzysztofarendt>`__, Center for
-Energy Informatics, University of Southern Denmark
-
 License
 =======
 
