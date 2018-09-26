@@ -58,38 +58,51 @@ class ExtInterface(BasicEdit):
 
         return intf
 
-    def output_to_interface(self, mask, key_values, inplace=True):
+    def output_to_interface(self, mask, key_values, fmu_names=None, inplace=True):
         """
         Returns external interface objects for Output:Variable.
 
         .. warning::
 
-            Currently, the method only supports Output:Variable objects
-            defined in IDF with *key value* = \*. The argument *key_values*
-            is used to expand the interface to all needed objects.
+            The argument *key_values* is used to expand the interface to all needed objects.
+            The method does not read the key value from the Output:Variable object definition.
+
+        .. warning::
+
+            The method is not adapted for use with multiple Output:Variable objects.
+            It is possible, however, to add multiple key values within one Output:Variable.
 
         :param mask: Mask with selected outputs
         :type mask: list(bool)
-        :param key_values: Key values from Output:Variable after expanding \*
+        :param key_values: Key values from Output:Variable ('*' can't be used)
         :type key_values: list(str)
+        :param fmu_names: Custom FMU variable names
+        :type fmu_names: None or list(str)
         :param bool inplace: If True, original schedules are commented and new are added in place
         :returns: Schedules interface objects
         :rtype: list(list(str))
         """
         # TODO: Add support for Output:Variable with explicitly defined key name (not '*')
+        # TODO: Currently it's not adapted for use with multiple Output:Variable objects
 
         intf = list()
 
         outvars = self.filter(mask)
 
+        if fmu_names is None:
+            fmu_names = [None for x in range(len(key_values))]
+
         for obj in outvars:
-            for name in key_values:
-                var_name = self.get_field(obj, 'Variable Name')
-                fmu_var_name = var_name.replace(' ', '_') + '_' + name.replace(' ', '_')
+            for kv, fvn in zip(key_values, fmu_names):
+                vn = self.get_field(obj, 'Variable Name')
+                if fvn is None:
+                    fmu_var_name = vn.replace(' ', '_') + '_' + kv.replace(' ', '_')
+                else:
+                    fmu_var_name = fvn
                 t = list()
                 t.append("ExternalInterface:FunctionalMockupUnitExport:From:Variable")
-                t.append("{}".format(name))         # Output:Variable Index Key Name
-                t.append("{}".format(var_name))     # Output:Variable Name
+                t.append("{}".format(kv))         # Output:Variable Index Key Name
+                t.append("{}".format(vn))     # Output:Variable Name
                 t.append("{}".format(fmu_var_name)) # FMU Variable Name
                 intf.append(t)
 
