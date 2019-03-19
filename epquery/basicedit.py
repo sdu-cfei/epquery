@@ -11,6 +11,7 @@ import copy
 import tempfile
 import shutil
 import os
+import io
 import collections
 import sys
 from fuzzywuzzy import fuzz
@@ -743,7 +744,7 @@ class BasicEdit(object):
             idf_str += '\n'
 
         # Save file
-        with open(path, 'w') as f:
+        with io.open(path, 'w', encoding="utf-8") as f:
             f.write(idf_str)
 
         return None
